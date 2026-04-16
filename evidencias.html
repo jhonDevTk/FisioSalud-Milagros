@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Evidencias clínicas de FisioSalud Milagros. Videos reales de recuperación en Lima.">
+    <title>FisioSalud Milagros — Evidencias</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/evidencias.css">
+    <style>
+        /* Botones de compartir en el panel */
+        .panel-share-row {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+        .btn-copy-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0,229,195,.08);
+            border: 1px solid rgba(0,229,195,.2);
+            color: var(--accent);
+            padding: 5px 12px;
+            border-radius: 7px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            white-space: nowrap;
+        }
+        .btn-copy-link:hover { background: rgba(0,229,195,.15); }
+        .btn-share-wa {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(37,211,102,.08);
+            border: 1px solid rgba(37,211,102,.2);
+            color: #25D366;
+            padding: 5px 12px;
+            border-radius: 7px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            white-space: nowrap;
+        }
+        .btn-share-wa:hover { background: rgba(37,211,102,.15); }
+        /* Badge link URL visible */
+        .url-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: .7rem;
+            color: var(--muted);
+            margin-top: 8px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .url-badge span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a class="logo" href="index.html">
+            <span class="logo-fisio">Fisio</span><span class="logo-salud">Salud</span>
+            <span class="logo-milagros">Milagros</span>
+        </a>
+        <ul class="nav-tabs">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="evidencias.html" class="active">Evidencias</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+        <a class="nav-cta" href="contacto.html">Agendar cita</a>
+        <a class="nav-panel-btn" href="acceso.html" title="Acceso al panel">🔒 Panel</a>
+        <button class="hamburger" id="hamBtn" aria-label="Menú">
+            <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
+        </button>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">🏠 Inicio</a>
+        <a href="nosotros.html">👥 Nosotros</a>
+        <a href="evidencias.html" class="active">🎬 Evidencias</a>
+        <a href="contacto.html">📞 Contacto</a>
+        <a href="contacto.html" class="mob-cta">Agendar cita →</a>
+        <a href="acceso.html" style="display:block;margin:0 1.5rem 1rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#8888aa;text-align:center;padding:10px;border-radius:10px;font-size:.82rem;text-decoration:none;border-bottom:none;">🔒 Acceso al panel</a>
+    </div>
+
+    <!-- WhatsApp flotante -->
+    <div class="wa-float">
+        <div class="wa-bubble" id="waBubble"><strong>¡Hola! 👋</strong>Escríbenos por WhatsApp, estamos disponibles.</div>
+        <button class="wa-btn" onclick="toggleBubble()" title="WhatsApp">
+            <span class="wa-ping"></span>
+            <svg viewBox="0 0 32 32" fill="white"><path d="M16 2C8.268 2 2 8.268 2 16c0 2.478.672 4.8 1.845 6.79L2 30l7.418-1.82A13.94 13.94 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 25.5a11.45 11.45 0 01-5.828-1.593l-.418-.248-4.33 1.063 1.095-4.217-.272-.433A11.46 11.46 0 014.5 16C4.5 9.597 9.597 4.5 16 4.5S27.5 9.597 27.5 16 22.403 27.5 16 27.5zm6.29-8.61c-.344-.172-2.036-1.004-2.351-1.118-.316-.115-.546-.172-.776.172-.23.344-.89 1.118-1.09 1.348-.2.23-.4.258-.745.086-.344-.172-1.453-.535-2.768-1.708-1.023-.913-1.714-2.04-1.915-2.384-.2-.344-.021-.53.15-.7.155-.154.344-.4.517-.6.172-.2.23-.344.344-.574.115-.23.057-.43-.029-.6-.086-.172-.776-1.87-1.063-2.56-.28-.672-.564-.58-.776-.59-.2-.01-.43-.012-.66-.012-.23 0-.603.086-.918.43-.316.344-1.205 1.177-1.205 2.87s1.233 3.328 1.405 3.558c.172.23 2.427 3.706 5.88 5.197.822.354 1.463.566 1.963.724.824.262 1.575.225 2.168.136.661-.099 2.036-.832 2.323-1.635.287-.804.287-1.493.2-1.635-.085-.143-.315-.229-.66-.401z"/></svg>
+        </button>
+    </div>
+
+    <section class="evidencias-section">
+        <span class="section-tag">Casos clínicos reales</span>
+        <h1 class="section-title">Evidencias de tratamiento</h1>
+        <p class="section-desc">Selecciona un especialista para ver sus casos documentados en video. Puedes compartir el perfil directamente por WhatsApp.</p>
+
+        <!-- Grid especialistas -->
+        <div class="esp-filter-grid">
+            <div class="esp-av-main" id="esp-mm" onclick="toggleEspPanel('mm','MM','Milagros Mayorga','Supervisora · Fisioterapia y Rehabilitación',this)">
+                <span class="dir-dot"></span>
+                <div class="ev-circle-main"><img src="img/foto-mm.png" alt="Milagros Mayorga" class="foto-real"></div>
+                <div class="ev-esp-name-main">Milagros Mayorga</div>
+                <div class="ev-esp-role">Supervisora</div>
+                <div class="ev-vid-pill-main">🎬 2</div>
+            </div>
+            <div class="esp-av-sec" id="esp-lc" onclick="toggleEspPanel('lc','LC','Luis Coz','Tec. Fisioterapia y Rehabilitación',this)">
+                <div class="ev-circle-sec"><img src="img/foto-lc.png" alt="Luis Coz" class="foto-real"></div>
+                <div class="ev-esp-name-sec">Luis Coz</div>
+                <div class="ev-esp-role">Especialista</div>
+                <div class="ev-vid-pill-sec">🎬 2</div>
+            </div>
+            <div class="esp-av-sec" id="esp-tc" onclick="toggleEspPanel('tc','TC','Trinidad T. Cárdenas','Tec. Fisioterapia y Rehabilitación',this)">
+                <div class="ev-circle-sec"><img src="img/foto-tc.png" alt="Trinidad T. Cárdenas" class="foto-real"></div>
+                <div class="ev-esp-name-sec">Trinidad T. Cárdenas</div>
+                <div class="ev-esp-role">Especialista</div>
+                <div class="ev-vid-pill-sec">🎬 1</div>
+            </div>
+            <div class="esp-av-sec" id="esp-bm" onclick="toggleEspPanel('bm','BM','Briguitt L. Martínez','Fisioterapia, Rehabilitación y Enfermería',this)">
+                <div class="ev-circle-sec"><img src="img/foto-bm.png" alt="Briguitt L. Martínez" class="foto-real"></div>
+                <div class="ev-esp-name-sec">Briguitt L. Martínez</div>
+                <div class="ev-esp-role">Especialista</div>
+                <div class="ev-vid-pill-sec">🎬 2</div>
+            </div>
+            <div class="esp-av-sec" id="esp-ae" onclick="toggleEspPanel('ae','AE','Aurora Escudero','Fisioterapia y Rehabilitación',this)">
+                <div class="ev-circle-sec"><img src="img/foto-ae.png" alt="Aurora Escudero" class="foto-real"></div>
+                <div class="ev-esp-name-sec">Aurora Escudero</div>
+                <div class="ev-esp-role">Especialista</div>
+                <div class="ev-vid-pill-sec">🎬 1</div>
+            </div>
+        </div>
+
+        <!-- Panel de videos -->
+        <div class="esp-panel" id="espPanel">
+            <div class="panel-header">
+                <div class="panel-av" id="panelAv">MM</div>
+                <div style="flex:1;">
+                    <div class="panel-name" id="panelName">Milagros Mayorga</div>
+                    <div class="panel-role" id="panelRole">Supervisora</div>
+                </div>
+                <!-- Botones compartir -->
+                <div class="panel-share-row">
+                    <button class="btn-copy-link" onclick="copyShareLink(currentEsp)">🔗 Copiar link</button>
+                    <button class="btn-share-wa"  onclick="shareByWhatsApp(currentEsp)">
+                        <svg width="12" height="12" viewBox="0 0 32 32" fill="#25D366"><path d="M16 2C8.268 2 2 8.268 2 16c0 2.478.672 4.8 1.845 6.79L2 30l7.418-1.82A13.94 13.94 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2z"/></svg>
+                        Compartir
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="cat-filters">
+                    <button class="cat-btn active" onclick="filterCat(this,'all')">Todos</button>
+                    <button class="cat-btn" onclick="filterCat(this,'Neurológico')">Neurológico</button>
+                    <button class="cat-btn" onclick="filterCat(this,'Deportivo')">Deportivo</button>
+                    <button class="cat-btn" onclick="filterCat(this,'Manual')">Manual</button>
+                    <button class="cat-btn" onclick="filterCat(this,'Musculoesq.')">Musculoesq.</button>
+                    <button class="cat-btn" onclick="filterCat(this,'Obstétrico')">Obstétrico</button>
+                    <button class="cat-btn" onclick="filterCat(this,'General')">General</button>
+                </div>
+                <div class="videos-grid" id="videosGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <a class="logo footer-logo" href="index.html" style="text-decoration:none;">
+            <span class="logo-fisio" style="font-size:.95rem;">Fisio</span>
+            <span class="logo-salud" style="font-size:.95rem;">Salud</span>
+            <span class="logo-milagros" style="font-size:.52rem;">Milagros</span>
+        </a>
+        <span>© 2025 FisioSalud Milagros</span>
+        <span>Lima, Perú · +51 921 720 767</span>
+    </footer>
+
+    <script src="js/nav.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/sheets.js"></script>
+    <script src="js/evidencias.js"></script>
+</body>
+</html>

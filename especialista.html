@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Especialista — FisioSalud Milagros</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .admin-content{max-width:700px;}
+        .esp-bienvenida{background:linear-gradient(135deg,#0c1c17,#111126);border:1.5px solid rgba(0,229,195,.3);border-radius:16px;padding:1.4rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:14px;}
+        .esp-av-grande{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(0,229,195,.2),rgba(0,229,195,.05));border:2px solid rgba(0,229,195,.35);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--accent);flex-shrink:0;}
+        .esp-bienvenida h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.2rem;}
+        .esp-bienvenida p{font-size:.76rem;color:var(--muted);}
+        .pasos-lista{background:rgba(0,229,195,.04);border:1px solid rgba(0,229,195,.12);border-radius:10px;padding:1rem;margin-bottom:1.2rem;}
+        .pasos-lista p{font-size:.76rem;color:var(--muted);margin-bottom:.3rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+        .paso-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:.78rem;color:var(--muted);}
+        .paso-num{width:22px;height:22px;border-radius:50%;background:rgba(0,229,195,.12);border:1px solid rgba(0,229,195,.22);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--accent);flex-shrink:0;}
+        .nota-aprobacion{background:rgba(239,159,39,.07);border:1px solid rgba(239,159,39,.22);border-radius:9px;padding:.85rem 1rem;margin-bottom:1rem;font-size:.75rem;color:#ef9f27;line-height:1.55;}
+        .vid-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;}
+        .vid-thumb-mini{width:64px;height:42px;border-radius:6px;background:var(--bg4);flex-shrink:0;overflow:hidden;}
+        .vid-thumb-mini img{width:100%;height:100%;object-fit:cover;}
+        .vid-info{flex:1;min-width:0;}
+        .vid-titulo{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .vid-meta{font-size:.7rem;color:var(--muted);margin-top:2px;}
+        .estado-pub{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:100px;text-transform:uppercase;flex-shrink:0;}
+        .pub{background:rgba(0,229,195,.1);border:1px solid rgba(0,229,195,.2);color:var(--accent);}
+        .pend{background:rgba(239,159,39,.1);border:1px solid rgba(239,159,39,.2);color:#ef9f27;}
+        @media(max-width:480px){.admin-form-row{grid-template-columns:1fr;}}
+    </style>
+</head>
+<body>
+<div class="admin-layout visible">
+    <header class="admin-header">
+        <div class="admin-header-left">
+            <div style="position:relative;display:inline-block;padding-bottom:.55rem;padding-right:.35rem;">
+                <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:#00e5c3;">Fisio</span>
+                <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:#f0f0f5;">Salud</span>
+                <span style="font-family:'Fraunces',serif;font-style:italic;font-size:.52rem;color:#f0f0f5;-webkit-text-stroke:.3px #7b6cff;position:absolute;bottom:0;right:-.08rem;transform:rotate(-9deg);transform-origin:left bottom;white-space:nowrap;">Milagros</span>
+            </div>
+            <span class="admin-badge">👩‍⚕️ Especialista</span>
+        </div>
+        <button class="logout-btn" onclick="doLogout()">Cerrar sesión</button>
+    </header>
+    <div class="admin-content">
+        <div class="esp-bienvenida">
+            <div class="esp-av-grande" id="espAvatar">?</div>
+            <div>
+                <h3 id="espNombreTitle">Cargando...</h3>
+                <p id="espEspTitle">Panel de especialista</p>
+            </div>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <span class="admin-card-title">🎬 Subir nuevo caso clínico</span>
+            </div>
+            <div class="pasos-lista">
+                <p>Cómo subir tu video:</p>
+                <div class="paso-item"><div class="paso-num">1</div><span>Graba el video del caso tratado</span></div>
+                <div class="paso-item"><div class="paso-num">2</div><span>Súbelo a YouTube (puede ser privado o no listado)</span></div>
+                <div class="paso-item"><div class="paso-num">3</div><span>Copia el link y pégalo abajo</span></div>
+            </div>
+            <div class="admin-form-group">
+                <label>Link de YouTube</label>
+                <input class="admin-input" id="vid-url" placeholder="https://www.youtube.com/watch?v=..." oninput="previewYT()">
+            </div>
+            <div id="ytPreview" style="display:none;margin-bottom:12px;">
+                <img id="ytThumb" src="" alt="Preview" style="width:100%;max-width:320px;border-radius:10px;border:1px solid var(--border);">
+                <p style="font-size:.72rem;color:var(--accent);margin-top:4px;">✅ Video detectado</p>
+            </div>
+            <div class="admin-form-row">
+                <div class="admin-form-group">
+                    <label>Título del caso</label>
+                    <input class="admin-input" id="vid-titulo" placeholder="Ej: Rehabilitación post-cirugía">
+                </div>
+                <div class="admin-form-group">
+                    <label>Categoría</label>
+                    <select class="admin-select" id="vid-cat">
+                        <option>Neurológico</option><option>Deportivo</option><option>Manual</option>
+                        <option>Musculoesq.</option><option>Obstétrico</option><option>Postquirúrgico</option><option>General</option>
+                    </select>
+                </div>
+            </div>
+            <div class="admin-form-group">
+                <label>Descripción del caso y resultado</label>
+                <textarea class="admin-input admin-textarea" id="vid-desc" placeholder="Describe el diagnóstico, protocolo y resultado..."></textarea>
+            </div>
+            <div class="nota-aprobacion" style="background:rgba(0,229,195,.07);border-color:rgba(0,229,195,.22);color:var(--accent);">✅ <strong>Publicación inmediata:</strong> Tu video aparecerá directamente en la página de evidencias. La supervisora puede eliminarlo si es necesario.</div>
+            <button class="btn-add" onclick="subirVideo()" style="width:100%;padding:13px;font-size:.88rem;justify-content:center;">📤 Enviar para aprobación</button>
+        </div>
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <span class="admin-card-title">📋 Mis videos</span>
+                <span style="font-size:.72rem;color:var(--muted);" id="contadorVids">Cargando...</span>
+            </div>
+            <div id="misVideosList"><p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem;">Cargando...</p></div>
+        </div>
+    </div>
+</div>
+<div class="admin-toast" id="adminToast"></div>
+<script src="js/config.js"></script>
+<script src="js/sheets.js"></script>
+<script>
+var sesionId = '', sesionNombre = '';
+try {
+    if (sessionStorage.getItem('fsm_rol') !== 'especialista') { window.location.href = 'acceso.html'; }
+    sesionId     = sessionStorage.getItem('fsm_id')     || '';
+    sesionNombre = sessionStorage.getItem('fsm_nombre') || '';
+} catch(e) { window.location.href = 'acceso.html'; }
+
+window.addEventListener('load', function() {
+    var esp = ESPECIALISTAS_DEFAULT.find(function(e){ return e.id === sesionId; });
+    if (esp) {
+        document.getElementById('espAvatar').textContent = esp.iniciales;
+        document.getElementById('espNombreTitle').textContent = esp.nombre;
+        document.getElementById('espEspTitle').textContent = esp.especialidad;
+    } else {
+        document.getElementById('espNombreTitle').textContent = sesionNombre;
+    }
+    cargarMisVideos();
+});
+
+function doLogout() { try{ sessionStorage.clear(); }catch(e){} window.location.href = 'acceso.html'; }
+
+function getYTId(url) { if(!url)return null; var m=url.match(/(?:v=|youtu\.be\/)([^&?/]+)/); return m?m[1]:null; }
+
+function previewYT() {
+    var ytId = getYTId(document.getElementById('vid-url').value.trim());
+    var prev = document.getElementById('ytPreview');
+    if (ytId) { document.getElementById('ytThumb').src='https://img.youtube.com/vi/'+ytId+'/mqdefault.jpg'; prev.style.display='block'; }
+    else { prev.style.display='none'; }
+}
+
+function subirVideo() {
+    var url=document.getElementById('vid-url').value.trim(), titulo=document.getElementById('vid-titulo').value.trim(), desc=document.getElementById('vid-desc').value.trim();
+    if(!url){alert('El link de YouTube es obligatorio.');return;}
+    if(!titulo){alert('El título es obligatorio.');return;}
+    if(!desc){alert('La descripción es obligatoria.');return;}
+    var nuevo={id:Date.now(),url:url,titulo:titulo,especialista:sesionId,categoria:document.getElementById('vid-cat').value,descripcion:desc,estado:'publicado',fecha:new Date().toLocaleDateString('es-PE')};
+    showToast('📤 Enviando...');
+    writeToSheet({sheet:'videos',action:'add',row:nuevo},function(){
+        showToast('✅ Video enviado — Pendiente de aprobación');
+        document.getElementById('vid-url').value=''; document.getElementById('vid-titulo').value=''; document.getElementById('vid-desc').value='';
+        document.getElementById('ytPreview').style.display='none';
+        cargarMisVideos();
+        var esp=ESPECIALISTAS_DEFAULT.find(function(e){return e.id===sesionId;});
+        /* Notificación WA desactivada — videos se publican directo */
+    });
+}
+
+function cargarMisVideos() {
+    getData('videos',function(data){
+        var mis=data.filter(function(v){return(v.especialista||v.Especialista||'')===sesionId;});
+        var pub=mis.filter(function(v){return(v.estado||v.Estado)==='publicado';}).length;
+        document.getElementById('contadorVids').textContent=mis.length+' videos · '+pub+' publicados';
+        if(!mis.length){document.getElementById('misVideosList').innerHTML='<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem;">Aún no tienes videos enviados.</p>';return;}
+        document.getElementById('misVideosList').innerHTML=mis.map(function(v){
+            var ytId=getYTId(v.url||v.URL||''), estado=v.estado||v.Estado||'pendiente';
+            var thumb=ytId?'<img src="https://img.youtube.com/vi/'+ytId+'/mqdefault.jpg" style="width:100%;height:100%;object-fit:cover;">':'🎬';
+            return '<div class="vid-item"><div class="vid-thumb-mini">'+thumb+'</div><div class="vid-info"><div class="vid-titulo">'+(v.titulo||v.Título||'')+'</div><div class="vid-meta">'+(v.categoria||v.Categoría||'')+' · '+(v.fecha||'')+'</div></div><span class="estado-pub '+(estado==='publicado'?'pub':'pend')+'">'+estado+'</span></div>';
+        }).join('');
+    });
+}
+
+function showToast(msg){var t=document.getElementById('adminToast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);}
+</script>
+</body>
+</html>

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin — FisioSalud Milagros</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+<!-- Login manejado por acceso.html -->
+<div class="login-screen" id="loginScreen" style="display:none;"></div>
+
+
+<!-- ======================== PANEL ADMIN ======================== -->
+<div class="admin-layout" id="adminLayout">
+
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="admin-header-left">
+            <div style="position:relative;display:inline-block;padding-bottom:.55rem;padding-right:.35rem;">
+                <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:#00e5c3;">Fisio</span>
+                <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:#f0f0f5;">Salud</span>
+                <span style="font-family:'Georgia',serif;font-style:italic;font-size:.52rem;color:#f0f0f5;-webkit-text-stroke:.3px #7b6cff;position:absolute;bottom:0;right:-.08rem;transform:rotate(-9deg);transform-origin:left bottom;white-space:nowrap;">Milagros</span>
+            </div>
+            <span class="admin-badge">👑 Administrador</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+            <a href="index.html" style="font-size:.75rem;color:var(--muted);text-decoration:none;" target="_blank">Ver sitio →</a>
+            <button class="logout-btn" onclick="doLogout()">Cerrar sesión</button>
+        </div>
+    </header>
+
+    <!-- Contenido -->
+    <div class="admin-content">
+
+        <!-- Aviso si Sheets no está configurado -->
+        <div id="configWarning" style="display:none;
+            background:rgba(239,159,39,.12);
+            border:2px solid rgba(239,159,39,.5);
+            border-radius:14px;
+            padding:1.2rem 1.3rem;
+            margin-bottom:1.4rem;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:.5rem;">
+                <span style="font-size:1.5rem;">⚠️</span>
+                <h4 style="font-family:Syne,sans-serif;font-size:1rem;font-weight:700;color:#ef9f27;">
+                    Google Sheets NO está configurado
+                </h4>
+            </div>
+            <p style="font-size:.8rem;color:#c89a50;line-height:1.6;margin-bottom:.5rem;">
+                Los cambios que hagas <strong style="color:#ef9f27;">solo se guardan en este navegador</strong>.
+                Si cierras el navegador o usas otro dispositivo, los datos podrían perderse.
+            </p>
+            <p style="font-size:.78rem;color:#8888aa;line-height:1.55;">
+                Para activar: abre <code style="background:rgba(255,255,255,.08);padding:2px 7px;border-radius:4px;color:#00e5c3;">js/config.js</code>
+                con el Bloc de notas y pega tu ID en <code style="background:rgba(255,255,255,.08);padding:2px 7px;border-radius:4px;color:#00e5c3;">SHEETS_ID</code>.
+                Sigue la guía <code style="background:rgba(255,255,255,.08);padding:2px 7px;border-radius:4px;color:#00e5c3;">GUIA_GOOGLE_SHEETS.md</code>.
+            </p>
+        </div>
+
+        <!-- Dashboard rápido -->
+        <div class="stats-grid" id="dashStats">
+            <div class="stat-card">
+                <span class="big-num" id="statEsp">5</span>
+                <span class="stat-label">Especialistas</span>
+            </div>
+            <div class="stat-card">
+                <span class="big-num" id="statVid">20</span>
+                <span class="stat-label">Videos</span>
+            </div>
+            <div class="stat-card">
+                <span class="big-num" id="statCom">0</span>
+                <span class="stat-label">Pendientes</span>
+            </div>
+            <div class="stat-card">
+                <span class="big-num" id="statServ">6</span>
+                <span class="stat-label">Servicios</span>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="switchTab('equipo',this)">👥 Equipo</button>
+            <button class="admin-tab"        onclick="switchTab('videos',this)">🎬 Videos</button>
+            <button class="admin-tab"        onclick="switchTab('servicios',this)">⚙️ Servicios</button>
+            <button class="admin-tab"        onclick="switchTab('comentarios',this)">💬 Comentarios</button>
+            <button class="admin-tab"        onclick="switchTab('contacto',this)">📞 Contacto</button>
+        </div>
+
+
+        <!-- ========== TAB: EQUIPO ========== -->
+        <div class="admin-panel active" id="panel-equipo">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <span class="admin-card-title">👥 Gestionar especialistas</span>
+                    <button class="btn-add" onclick="toggleForm('formEquipo')">+ Agregar</button>
+                </div>
+
+                <!-- Formulario agregar especialista -->
+                <div id="formEquipo" style="display:none;margin-bottom:1.2rem;padding:1rem;background:rgba(0,229,195,.04);border:1px solid rgba(0,229,195,.15);border-radius:var(--r-md);">
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Nombre completo</label>
+                            <input class="admin-input" id="eq-nombre" placeholder="Ej: Mg. María López">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Cargo</label>
+                            <input class="admin-input" id="eq-cargo" placeholder="Ej: Fisioterapeuta">
+                        </div>
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Especialidad</label>
+                            <input class="admin-input" id="eq-especialidad" placeholder="Ej: Rehabilitación Deportiva">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Años de experiencia</label>
+                            <input class="admin-input" id="eq-anios" type="number" placeholder="8">
+                        </div>
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Frase / Cita</label>
+                            <input class="admin-input" id="eq-frase" placeholder="Su frase representativa">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>¿Es la directora?</label>
+                            <select class="admin-select" id="eq-principal">
+                                <option value="no">No</option>
+                                <option value="si">Sí — es la directora</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-add" onclick="addEspecialista()">Guardar especialista</button>
+                </div>
+
+                <!-- Lista de especialistas -->
+                <div class="admin-list" id="listaEquipo">
+                    <div style="text-align:center;padding:1rem;color:var(--muted);font-size:.8rem;">Cargando...</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========== TAB: VIDEOS ========== -->
+        <div class="admin-panel" id="panel-videos">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <span class="admin-card-title">🎬 Gestionar videos</span>
+                    <button class="btn-add" onclick="toggleForm('formVideo')">+ Agregar</button>
+                </div>
+
+                <!-- Formulario agregar video -->
+                <div id="formVideo" style="display:none;margin-bottom:1.2rem;padding:1rem;background:rgba(0,229,195,.04);border:1px solid rgba(0,229,195,.15);border-radius:var(--r-md);">
+                    <div class="admin-form-group">
+                        <label>Link de YouTube</label>
+                        <input class="admin-input" id="vid-url" placeholder="https://www.youtube.com/watch?v=..." oninput="previewYT()">
+                    </div>
+                    <div id="ytPreview" style="display:none;margin-bottom:10px;">
+                        <img id="ytThumb" src="" alt="Preview" style="width:100%;max-width:320px;border-radius:8px;border:1px solid var(--border);">
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Título del caso</label>
+                            <input class="admin-input" id="vid-titulo" placeholder="Ej: Rehabilitación post-ACV">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Especialista</label>
+                            <select class="admin-select" id="vid-esp">
+                                <option value="mm">Milagros Mayorga</option>
+                                <option value="lc">Luis Coz</option>
+                                <option value="tc">Trinidad T. Cárdenas</option>
+                                <option value="bm">Briguitt L. Martínez</option>
+                                <option value="ae">Aurora Escudero</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Categoría</label>
+                            <select class="admin-select" id="vid-cat">
+                                <option>Neurológico</option>
+                                <option>Deportivo</option>
+                                <option>Manual</option>
+                                <option>Musculoesq.</option>
+                                <option>Obstétrico</option>
+                                <option>Postquirúrgico</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Estado</label>
+                            <select class="admin-select" id="vid-estado">
+                                <option value="publicado">Publicado</option>
+                                <option value="borrador">Borrador</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Descripción breve</label>
+                        <textarea class="admin-input admin-textarea" id="vid-desc" placeholder="Describe el caso y el resultado del tratamiento..."></textarea>
+                    </div>
+                    <button class="btn-add" onclick="addVideo()">Publicar video</button>
+                </div>
+
+                <!-- Lista de videos -->
+                <div class="admin-list" id="listaVideos">
+                    <div style="text-align:center;padding:1rem;color:var(--muted);font-size:.8rem;">Cargando...</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========== TAB: SERVICIOS ========== -->
+        <div class="admin-panel" id="panel-servicios">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <span class="admin-card-title">⚙️ Gestionar servicios</span>
+                    <button class="btn-add" onclick="toggleForm('formServicio')">+ Agregar</button>
+                </div>
+
+                <!-- Formulario -->
+                <div id="formServicio" style="display:none;margin-bottom:1.2rem;padding:1rem;background:rgba(0,229,195,.04);border:1px solid rgba(0,229,195,.15);border-radius:var(--r-md);">
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label>Nombre del servicio</label>
+                            <input class="admin-input" id="srv-nombre" placeholder="Ej: Fisioterapia Deportiva">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Ícono (emoji)</label>
+                            <input class="admin-input" id="srv-icono" placeholder="🏃" style="font-size:1.2rem;text-align:center;">
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Descripción</label>
+                        <textarea class="admin-input admin-textarea" id="srv-desc" placeholder="Describe brevemente el servicio..."></textarea>
+                    </div>
+                    <button class="btn-add" onclick="addServicio()">Guardar servicio</button>
+                </div>
+
+                <!-- Lista servicios -->
+                <div class="admin-list" id="listaServicios">
+                    <div style="text-align:center;padding:1rem;color:var(--muted);font-size:.8rem;">Cargando...</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========== TAB: COMENTARIOS ========== -->
+        <div class="admin-panel" id="panel-comentarios">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <span class="admin-card-title">💬 Moderar comentarios</span>
+                    <span style="font-size:.75rem;color:var(--muted);">Aprueba antes de publicar</span>
+                </div>
+
+                <div style="display:flex;gap:8px;margin-bottom:1rem;">
+                    <button class="admin-tab active" style="flex:none;padding:6px 14px;" onclick="filterComments('pendiente',this)">Pendientes</button>
+                    <button class="admin-tab" style="flex:none;padding:6px 14px;" onclick="filterComments('aprobado',this)">Aprobados</button>
+                    <button class="admin-tab" style="flex:none;padding:6px 14px;" onclick="filterComments('all',this)">Todos</button>
+                </div>
+
+                <div class="admin-list" id="listaComentarios">
+                    <div style="text-align:center;padding:1rem;color:var(--muted);font-size:.8rem;">Cargando...</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========== TAB: CONTACTO ========== -->
+        <div class="admin-panel" id="panel-contacto">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <span class="admin-card-title">📞 Información de contacto</span>
+                    <button class="btn-save" onclick="saveContacto()">Guardar cambios</button>
+                </div>
+
+                <div class="admin-form-group">
+                    <label>Dirección</label>
+                    <input class="admin-input" id="ct-direccion" placeholder="Av. Javier Prado Este 1234, San Isidro, Lima">
+                </div>
+                <div class="admin-form-row">
+                    <div class="admin-form-group">
+                        <label>Teléfono / WhatsApp</label>
+                        <input class="admin-input" id="ct-telefono" placeholder="+51 921 720 767">
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Email</label>
+                        <input class="admin-input" id="ct-email" placeholder="info@fisiosaludmilagros.pe">
+                    </div>
+                </div>
+                <div class="admin-form-group">
+                    <label>Horario de atención</label>
+                    <input class="admin-input" id="ct-horario" placeholder="Lun – Vie: 8:00 – 19:00 · Sáb: 8:00 – 13:00">
+                </div>
+                <div class="admin-form-group">
+                    <label>Texto del Hero (página de inicio)</label>
+                    <textarea class="admin-input admin-textarea" id="ct-hero" placeholder="Texto principal que aparece en la página de inicio..."></textarea>
+                </div>
+
+                <button class="btn-save" onclick="saveContacto()" style="width:100%;padding:12px;margin-top:4px;">
+                    💾 Guardar todos los cambios
+                </button>
+            </div>
+        </div>
+
+    </div><!-- /admin-content -->
+</div><!-- /admin-layout -->
+
+<!-- Toast -->
+<div class="admin-toast" id="adminToast"></div>
+
+
+<!-- Scripts -->
+<script src="js/config.js"></script>
+<script>
+/* Verificar sesión */
+try {
+    var _rol = sessionStorage.getItem("fsm_rol");
+    if (_rol !== "admin") { window.location.href = "acceso.html"; }
+} catch(e) {}
+</script>
+<script src="js/sheets.js"></script>
+<script>
+
+/* ===================== SESIÓN DESDE acceso.html ===================== */
+
+function doLogout() {
+    try { sessionStorage.clear(); } catch(e) {}
+    window.location.href = 'acceso.html';
+}
+
+/* Verificar sesión al cargar */
+try {
+    var _rol = sessionStorage.getItem('fsm_rol');
+    if (_rol !== 'admin') {
+        window.location.href = 'acceso.html';
+    } else {
+        document.getElementById('adminLayout').classList.add('visible');
+        /* initAdmin se llama más abajo */
+    }
+} catch(e) {
+    window.location.href = 'acceso.html';
+}
+
+
+/* ===================== INICIALIZAR ADMIN ===================== */
+
+window.addEventListener('load', function() {
+    try {
+        if (sessionStorage.getItem('fsm_rol') === 'admin') {
+            initAdmin();
+        }
+    } catch(e) {}
+});
+
+function initAdmin() {
+    if (!SHEETS_CONFIGURED) {
+        document.getElementById('configWarning').style.display = 'flex';
+    }
+    loadEquipo();
+    loadVideos();
+    loadServicios();
+    loadComentarios();
+    loadContacto();
+}
+
+
+/* ===================== TABS ===================== */
+
+function switchTab(name, btn) {
+    document.querySelectorAll('.admin-panel').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.admin-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.getElementById('panel-' + name).classList.add('active');
+    btn.classList.add('active');
+}
+
+function toggleForm(id) {
+    var f = document.getElementById(id);
+    f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+
+/* ===================== TOAST ===================== */
+
+function showToast(msg) {
+    var t = document.getElementById('adminToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+
+
+/* ===================== EQUIPO ===================== */
+
+var equipoData = [];
+
+function loadEquipo() {
+    getData('equipo', function(data) {
+        equipoData = data;
+        renderEquipo();
+        document.getElementById('statEsp').textContent = data.length;
+    });
+}
+
+function renderEquipo() {
+    var list = document.getElementById('listaEquipo');
+    if (!equipoData.length) {
+        list.innerHTML = '<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem;">No hay especialistas agregados aún.</p>';
+        return;
+    }
+    list.innerHTML = equipoData.map(function(e, i) {
+        var esPrincipal = (e.principal === 'si' || e.principal === true);
+        return '<div class="admin-item">'
+            + '<div class="admin-item-icon">' + (esPrincipal ? '⭐' : '👤') + '</div>'
+            + '<div class="admin-item-info">'
+            + '  <div class="admin-item-name">' + (e.nombre || e.Nombre || '') + '</div>'
+            + '  <div class="admin-item-sub">' + (e.especialidad || e.Especialidad || '') + ' · ' + (e.anios || e.Años || '?') + ' años</div>'
+            + '</div>'
+            + (esPrincipal ? '<span class="status-badge status-approved">Directora</span>' : '')
+            + '<div class="admin-item-actions">'
+            + '  <button class="btn-delete" onclick="deleteEspecialista(' + i + ')">Eliminar</button>'
+            + '</div>'
+            + '</div>';
+    }).join('');
+}
+
+function addEspecialista() {
+    var nombre = document.getElementById('eq-nombre').value.trim();
+    if (!nombre) { alert('El nombre es obligatorio.'); return; }
+
+    var nuevo = {
+        id:           'esp_' + Date.now(),
+        nombre:       nombre,
+        cargo:        document.getElementById('eq-cargo').value.trim(),
+        especialidad: document.getElementById('eq-especialidad').value.trim(),
+        anios:        document.getElementById('eq-anios').value.trim(),
+        frase:        document.getElementById('eq-frase').value.trim(),
+        principal:    document.getElementById('eq-principal').value,
+        videos:       '0'
+    };
+
+    writeToSheet({ sheet: 'equipo', action: 'add', row: nuevo }, function(r) {
+        equipoData.push(nuevo);
+        renderEquipo();
+        document.getElementById('statEsp').textContent = equipoData.length;
+        toggleForm('formEquipo');
+        /* Limpiar */
+        ['eq-nombre','eq-cargo','eq-especialidad','eq-anios','eq-frase'].forEach(function(id) {
+            document.getElementById(id).value = '';
+        });
+        showToast('✅ Especialista agregado correctamente');
+    });
+}
+
+function deleteEspecialista(i) {
+    if (!confirm('¿Eliminar a ' + (equipoData[i].nombre || equipoData[i].Nombre) + '?')) return;
+    var id = equipoData[i].id;
+    writeToSheet({ sheet: 'equipo', action: 'delete', id: id }, function() {
+        equipoData.splice(i, 1);
+        renderEquipo();
+        document.getElementById('statEsp').textContent = equipoData.length;
+        showToast('🗑️ Especialista eliminado');
+    });
+}
+
+
+/* ===================== VIDEOS ===================== */
+
+var videosAdminData = [];
+
+function loadVideos() {
+    getData('videos', function(data) {
+        videosAdminData = data || [];
+        renderVideos();
+        document.getElementById('statVid').textContent = videosAdminData.length;
+    });
+}
+
+function getDefaultVideos() {
+    /* Sin videos de muestra - solo videos reales del Google Sheets */
+    return [];
+}
+
+function renderVideos() {
+    var list = document.getElementById('listaVideos');
+    if (!videosAdminData.length) {
+        list.innerHTML = '<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem;">No hay videos aún.</p>';
+        return;
+    }
+    list.innerHTML = videosAdminData.map(function(v, i) {
+        var ytId  = getYTId(v.url || v.URL || '');
+        var thumb = ytId
+            ? '<img src="https://img.youtube.com/vi/' + ytId + '/mqdefault.jpg" style="width:100%;height:100%;object-fit:cover;">'
+            : '🎬';
+        var titulo = v.titulo || v.Título || v.titulo || 'Sin título';
+        var esp    = v.especialista || v.Especialista || '';
+        var estado = v.estado || v.Estado || 'publicado';
+        return '<div class="admin-item">'
+            + '<div class="yt-thumb">' + thumb + '</div>'
+            + '<div class="admin-item-info">'
+            + '  <div class="admin-item-name">' + titulo + '</div>'
+            + '  <div class="admin-item-sub">' + espName(esp) + ' · ' + (v.categoria || v.Categoría || '') + '</div>'
+            + '</div>'
+            + '<span class="status-badge ' + (estado === 'publicado' ? 'status-approved' : 'status-pending') + '">'
+            + estado + '</span>'
+            + '<div class="admin-item-actions">'
+            + '  <button class="btn-delete" onclick="deleteVideo(' + i + ')">Eliminar</button>'
+            + '</div>'
+            + '</div>';
+    }).join('');
+}
+
+function getYTId(url) {
+    if (!url) return null;
+    var m = url.match(/(?:v=|youtu\.be\/)([^&?/]+)/);
+    return m ? m[1] : null;
+}
+
+function espName(id) {
+    var names = { mm:'Milagros Mayorga', lc:'Luis Coz', tc:'Trinidad Cárdenas', bm:'Briguitt Martínez', ae:'Aurora Escudero' };
+    return names[id] || id;
+}
+
+function previewYT() {
+    var url  = document.getElementById('vid-url').value.trim();
+    var ytId = getYTId(url);
+    var prev = document.getElementById('ytPreview');
+    if (ytId) {
+        document.getElementById('ytThumb').src = 'https://img.youtube.com/vi/' + ytId + '/mqdefault.jpg';
+        prev.style.display = 'block';
+    } else {
+        prev.style.display = 'none';
+    }
+}
+
+function addVideo() {
+    var url = document.getElementById('vid-url').value.trim();
+    if (!url) { alert('El link de YouTube es obligatorio.'); return; }
+    var titulo = document.getElementById('vid-titulo').value.trim();
+    if (!titulo) { alert('El título es obligatorio.'); return; }
+
+    var nuevo = {
+        id:           Date.now(),
+        url:          url,
+        titulo:       titulo,
+        especialista: document.getElementById('vid-esp').value,
+        categoria:    document.getElementById('vid-cat').value,
+        descripcion:  document.getElementById('vid-desc').value.trim(),
+        estado:       'publicado'
+    };
+
+    writeToSheet({ sheet: 'videos', action: 'add', row: nuevo }, function() {
+        videosAdminData.unshift(nuevo);
+        renderVideos();
+        document.getElementById('statVid').textContent = videosAdminData.length;
+        toggleForm('formVideo');
+        ['vid-url','vid-titulo','vid-desc'].forEach(function(id) {
+            document.getElementById(id).value = '';
+        });
+        document.getElementById('ytPreview').style.display = 'none';
+        showToast('✅ Video publicado correctamente');
+    });
+}
+
+function deleteVideo(i) {
+    var titulo = videosAdminData[i].titulo || videosAdminData[i].Título;
+    if (!confirm('¿Eliminar el video "' + titulo + '"?')) return;
+    var id = videosAdminData[i].id;
+    writeToSheet({ sheet: 'videos', action: 'delete', id: id }, function() {
+        videosAdminData.splice(i, 1);
+        renderVideos();
+        document.getElementById('statVid').textContent = videosAdminData.length;
+        showToast('🗑️ Video eliminado');
+    });
+}
+
+
+/* ===================== SERVICIOS ===================== */
+
+var serviciosData = [];
+
+function loadServicios() {
+    getData('servicios', function(data) {
+        serviciosData = data;
+        renderServicios();
+        document.getElementById('statServ').textContent = data.length;
+    });
+}
+
+function renderServicios() {
+    var list = document.getElementById('listaServicios');
+    if (!serviciosData.length) {
+        list.innerHTML = '<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem;">No hay servicios.</p>';
+        return;
+    }
+    list.innerHTML = serviciosData.map(function(s, i) {
+        return '<div class="admin-item">'
+            + '<div class="admin-item-icon">' + (s.icono || s.Ícono || '⚕️') + '</div>'
+            + '<div class="admin-item-info">'
+            + '  <div class="admin-item-name">' + (s.nombre || s.Nombre || '') + '</div>'
+            + '  <div class="admin-item-sub">' + ((s.descripcion || s.Descripción || '').substring(0, 60)) + '...</div>'
+            + '</div>'
+            + '<div class="admin-item-actions">'
+            + '  <button class="btn-delete" onclick="deleteServicio(' + i + ')">Eliminar</button>'
+            + '</div>'
+            + '</div>';
+    }).join('');
+}
+
+function addServicio() {
+    var nombre = document.getElementById('srv-nombre').value.trim();
+    if (!nombre) { alert('El nombre es obligatorio.'); return; }
+    var nuevo = {
+        id:          Date.now(),
+        nombre:      nombre,
+        icono:       document.getElementById('srv-icono').value.trim() || '⚕️',
+        descripcion: document.getElementById('srv-desc').value.trim()
+    };
+    writeToSheet({ sheet: 'servicios', action: 'add', row: nuevo }, function() {
+        serviciosData.push(nuevo);
+        renderServicios();
+        document.getElementById('statServ').textContent = serviciosData.length;
+        toggleForm('formServicio');
+        ['srv-nombre','srv-icono','srv-desc'].forEach(function(id) {
+            document.getElementById(id).value = '';
+        });
+        showToast('✅ Servicio agregado');
+    });
+}
+
+function deleteServicio(i) {
+    if (!confirm('¿Eliminar el servicio "' + (serviciosData[i].nombre || serviciosData[i].Nombre) + '"?')) return;
+    writeToSheet({ sheet: 'servicios', action: 'delete', id: serviciosData[i].id }, function() {
+        serviciosData.splice(i, 1);
+        renderServicios();
+        document.getElementById('statServ').textContent = serviciosData.length;
+        showToast('🗑️ Servicio eliminado');
+    });
+}
+
+
+/* ===================== COMENTARIOS ===================== */
+
+var comentariosData   = [];
+var comentariosFiltro = 'pendiente';
+
+function loadComentarios() {
+    getData('comentarios', function(data) {
+        comentariosData = data;
+        renderComentarios();
+        var pendientes = data.filter(function(c) {
+            return (c.estado || c.Estado || 'pendiente') === 'pendiente';
+        }).length;
+        document.getElementById('statCom').textContent = pendientes;
+    });
+}
+
+function filterComments(filtro, btn) {
+    comentariosFiltro = filtro;
+    document.querySelectorAll('#panel-comentarios .admin-tab').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    renderComentarios();
+}
+
+function renderComentarios() {
+    var list = document.getElementById('listaComentarios');
+    var filtered = comentariosData.filter(function(c) {
+        if (comentariosFiltro === 'all') return true;
+        return (c.estado || c.Estado || 'pendiente') === comentariosFiltro;
+    });
+
+    if (!filtered.length) {
+        list.innerHTML = '<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:1rem;">No hay comentarios ' + comentariosFiltro + 's.</p>';
+        return;
+    }
+
+    list.innerHTML = filtered.map(function(c, i) {
+        var estado = c.estado || c.Estado || 'pendiente';
+        var stars  = '★'.repeat(parseInt(c.estrellas || c.Estrellas || 5));
+        return '<div class="admin-item" style="flex-direction:column;align-items:flex-start;">'
+            + '<div style="display:flex;align-items:center;gap:10px;width:100%;margin-bottom:6px;">'
+            + '  <div class="admin-item-icon">💬</div>'
+            + '  <div class="admin-item-info">'
+            + '    <div class="admin-item-name">' + (c.nombre || c.Nombre || 'Anónimo') + ' <span style="color:#f5c842;font-size:.7rem;">' + stars + '</span></div>'
+            + '    <div class="admin-item-sub">Video: ' + (c.video || c.Video || '-') + '</div>'
+            + '  </div>'
+            + '  <span class="status-badge ' + (estado === 'aprobado' ? 'status-approved' : 'status-pending') + '">' + estado + '</span>'
+            + '</div>'
+            + '<p style="font-size:.75rem;color:var(--muted);line-height:1.5;padding-left:2.5rem;width:100%;">' + (c.texto || c.Texto || '') + '</p>'
+            + '<div style="display:flex;gap:8px;padding-left:2.5rem;margin-top:8px;">'
+            + (estado !== 'aprobado' ? '<button class="btn-approve" onclick="approveComment(' + i + ')">✓ Aprobar</button>' : '')
+            + '<button class="btn-delete" onclick="deleteComment(' + i + ')">Eliminar</button>'
+            + '</div>'
+            + '</div>';
+    }).join('');
+}
+
+function approveComment(i) {
+    var filtered = comentariosData.filter(function(c) {
+        if (comentariosFiltro === 'all') return true;
+        return (c.estado || c.Estado || 'pendiente') === comentariosFiltro;
+    });
+    var real = comentariosData.indexOf(filtered[i]);
+    comentariosData[real].estado = 'aprobado';
+    writeToSheet({ sheet: 'comentarios', action: 'update', id: comentariosData[real].id, row: { estado: 'aprobado' } }, function() {
+        renderComentarios();
+        var pendientes = comentariosData.filter(function(c) {
+            return (c.estado || c.Estado || 'pendiente') === 'pendiente';
+        }).length;
+        document.getElementById('statCom').textContent = pendientes;
+        showToast('✅ Comentario aprobado y publicado');
+    });
+}
+
+function deleteComment(i) {
+    if (!confirm('¿Eliminar este comentario?')) return;
+    var filtered = comentariosData.filter(function(c) {
+        if (comentariosFiltro === 'all') return true;
+        return (c.estado || c.Estado || 'pendiente') === comentariosFiltro;
+    });
+    var real = comentariosData.indexOf(filtered[i]);
+    var id   = comentariosData[real].id;
+    writeToSheet({ sheet: 'comentarios', action: 'delete', id: id }, function() {
+        comentariosData.splice(real, 1);
+        renderComentarios();
+        showToast('🗑️ Comentario eliminado');
+    });
+}
+
+
+/* ===================== CONTACTO ===================== */
+
+function loadContacto() {
+    getData('contacto', function(data) {
+        data.forEach(function(row) {
+            var campo = (row.campo || row.Campo || '').toLowerCase();
+            if (campo.includes('direcc'))  document.getElementById('ct-direccion').value = row.valor || row.Valor || '';
+            if (campo.includes('tel'))     document.getElementById('ct-telefono').value  = row.valor || row.Valor || '';
+            if (campo.includes('email'))   document.getElementById('ct-email').value     = row.valor || row.Valor || '';
+            if (campo.includes('horario')) document.getElementById('ct-horario').value   = row.valor || row.Valor || '';
+            if (campo.includes('hero'))    document.getElementById('ct-hero').value      = row.valor || row.Valor || '';
+        });
+    });
+}
+
+function saveContacto() {
+    var rows = [
+        { campo: 'Dirección', valor: document.getElementById('ct-direccion').value.trim() },
+        { campo: 'Teléfono',  valor: document.getElementById('ct-telefono').value.trim()  },
+        { campo: 'Email',     valor: document.getElementById('ct-email').value.trim()     },
+        { campo: 'Horario',   valor: document.getElementById('ct-horario').value.trim()   },
+        { campo: 'Hero',      valor: document.getElementById('ct-hero').value.trim()      }
+    ];
+
+    writeToSheet({ sheet: 'contacto', action: 'replace', rows: rows }, function() {
+        showToast('✅ Información de contacto guardada');
+    });
+}
+
+</script>
+</body>
+</html>

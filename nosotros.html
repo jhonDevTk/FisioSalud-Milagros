@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Conoce al equipo de especialistas de FisioSalud Milagros. Profesionales certificados en fisioterapia y rehabilitación en Lima.">
+    <title>FisioSalud Milagros — Nosotros</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/nosotros.css">
+</head>
+
+<body>
+
+    <!-- ======================== NAVEGACIÓN ======================== -->
+    <nav>
+        <a class="logo" href="index.html">
+            <span class="logo-fisio">Fisio</span><span class="logo-salud">Salud</span>
+            <span class="logo-milagros">Milagros</span>
+        </a>
+
+        <ul class="nav-tabs">
+            <li><a href="index.html"             >Inicio</a></li>
+            <li><a href="nosotros.html" class="active">Nosotros</a></li>
+            <li><a href="evidencias.html"        >Evidencias</a></li>
+            <li><a href="contacto.html"          >Contacto</a></li>
+        </ul>
+
+        <a class="nav-cta" href="contacto.html">Agendar cita</a>
+        <a class="nav-panel-btn" href="acceso.html" title="Acceso al panel">🔒 Panel</a>
+
+        <button class="hamburger" id="hamBtn" aria-label="Menú">
+            <span class="ham-line"></span>
+            <span class="ham-line"></span>
+            <span class="ham-line"></span>
+        </button>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html"             >🏠 Inicio</a>
+        <a href="nosotros.html" class="active">👥 Nosotros</a>
+        <a href="evidencias.html"        >🎬 Evidencias</a>
+        <a href="contacto.html"          >📞 Contacto</a>
+        <a href="contacto.html" class="mob-cta">Agendar cita →</a>
+        <a href="acceso.html" style="display:block;margin:0 1.5rem 1rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#8888aa;text-align:center;padding:10px;border-radius:10px;font-size:.82rem;text-decoration:none;border-bottom:none;">🔒 Acceso al panel</a>
+    </div>
+
+    <!-- ======================== WHATSAPP FLOTANTE ======================== -->
+    <div class="wa-float">
+        <div class="wa-bubble" id="waBubble">
+            <strong>¡Hola! 👋</strong>
+            Escríbenos por WhatsApp, estamos disponibles para ayudarte.
+        </div>
+        <button class="wa-btn" onclick="toggleBubble()" title="Contactar por WhatsApp">
+            <span class="wa-ping"></span>
+            <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2C8.268 2 2 8.268 2 16c0 2.478.672 4.8 1.845 6.79L2 30l7.418-1.82A13.94
+                13.94 0 0016 30c7.732 0 14-6.268 14-14S23.732 2 16 2zm0 25.5a11.45 11.45 0
+                01-5.828-1.593l-.418-.248-4.33 1.063 1.095-4.217-.272-.433A11.46 11.46 0
+                014.5 16C4.5 9.597 9.597 4.5 16 4.5S27.5 9.597 27.5 16 22.403 27.5 16
+                27.5zm6.29-8.61c-.344-.172-2.036-1.004-2.351-1.118-.316-.115-.546-.172-.776.172
+                -.23.344-.89 1.118-1.09 1.348-.2.23-.4.258-.745.086-.344-.172-1.453-.535-2.768
+                -1.708-1.023-.913-1.714-2.04-1.915-2.384-.2-.344-.021-.53.15-.7.155-.154.344-.4
+                .517-.6.172-.2.23-.344.344-.574.115-.23.057-.43-.029-.6-.086-.172-.776-1.87
+                -1.063-2.56-.28-.672-.564-.58-.776-.59-.2-.01-.43-.012-.66-.012-.23 0-.603.086
+                -.918.43-.316.344-1.205 1.177-1.205 2.87s1.233 3.328 1.405 3.558c.172.23 2.427
+                3.706 5.88 5.197.822.354 1.463.566 1.963.724.824.262 1.575.225 2.168.136.661
+                -.099 2.036-.832 2.323-1.635.287-.804.287-1.493.2-1.635-.085-.143-.315-.229
+                -.66-.401z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- ======================== CONTENIDO ======================== -->
+    <section class="about-section">
+
+        <span class="section-tag">Sobre nosotros</span>
+        <h1 class="section-title">El equipo detrás<br>de tu recuperación</h1>
+        <p class="section-desc">
+            Profesionales certificados con años de experiencia clínica.
+            Cada tratamiento está basado en evidencia científica actualizada.
+        </p>
+
+        <!-- Misión y Visión -->
+        <div class="mv-grid">
+            <div class="mv-card">
+                <h3>💡 Nuestra misión</h3>
+                <p>Brindar atención fisioterapéutica de alta calidad, personalizada y basada en evidencia científica, para devolver a cada paciente su independencia y calidad de vida.</p>
+            </div>
+            <div class="mv-card">
+                <h3>🎯 Nuestra visión</h3>
+                <p>Ser el centro de fisioterapia y rehabilitación de referencia en Lima, reconocido por la excelencia clínica, la innovación terapéutica y el trato humano a cada paciente.</p>
+            </div>
+        </div>
+
+        <!-- ===== DIRECTORA — TARJETA PRINCIPAL ===== -->
+        <div class="card-main">
+            <span class="dir-badge">★ Directora &amp; Fundadora</span>
+
+            <div class="foto-main">
+                <img src="img/foto-mm.png" alt="Milagros Mayorga" class="foto-real">
+            </div>
+
+            <div class="info-main">
+                <div class="role-badge-main">⭐ Directora &amp; Fundadora</div>
+                <div class="name-main">Milagros Mayorga</div>
+                <div class="title-main">Supervisora - Tec. Fisioterapia y Rehabilitación </div>
+                <div class="quote-main">
+                    "Fundé FisioSalud Milagros con la convicción de que cada paciente merece
+                    un tratamiento personalizado basado en las mejores evidencias reales disponibles."
+                </div>
+                <div class="stats-row">
+                    <div class="stat-it"><span class="n">12</span><span class="l">Años</span></div>
+                    <div class="stat-sep"></div>
+                    <div class="stat-it"><span class="n">500+</span><span class="l">Pacientes</span></div>
+                    <div class="stat-sep"></div>
+                    <div class="stat-it"><span class="n">4</span><span class="l">Videos</span></div>
+                </div>
+                <div class="tags-row">
+                    <span class="tag-main">Fisioterapia</span>
+                    <span class="tag-main">Rehabilitación</span>
+                    <span class="tag-main">Supervisora</span>
+                </div>
+            </div>
+
+            <div class="vid-pill">🎬 4 videos</div>
+        </div>
+
+        <!-- ===== ESPECIALISTAS SECUNDARIOS ===== -->
+        <div class="cards-grid">
+
+            <!-- Carlos Ríos -->
+            <div class="card-sec">
+                <div class="foto-sec">
+                    <img src="img/foto-lc.png" alt="Luis Coz" class="foto-real">
+                </div>
+                <div class="info-sec">
+                    <div class="role-badge-sec">Fisioterapia</div>
+                    <div class="name-sec">Luis Coz</div>
+                    <div class="title-sec">Tec. Fisioterapia y Rehabilitación</div>
+                    <div class="exp-sec">Especialista en rehabilitación</div>
+                    <div class="quote-sec">"Especialista en retorno deportivo y prevención de lesiones en atletas."</div>
+                    <div class="tags-sec">
+                        <span class="tag-sec">LCA</span>
+                        <span class="tag-sec">Tendones</span>
+                        <span class="tag-sec">Rodilla</span>
+                    </div>
+                </div>
+                <div class="vid-pill-sec">🎬 6</div>
+            </div>
+
+            <!-- Ana Vargas -->
+            <div class="card-sec">
+                <div class="foto-sec">
+                    <img src="img/foto-tc.png" alt="Trinidad T. Cárdenas" class="foto-real">
+                </div>
+                <div class="info-sec">
+                    <div class="role-badge-sec">Fisioterapia</div>
+                    <div class="name-sec">Trinidad T. Cárdenas</div>
+                    <div class="title-sec">Tec. Fisioterapia y Rehabilitación</div>
+                    <div class="exp-sec">Especialista en terapia manual</div>
+                    <div class="quote-sec">"Liberación miofascial y punción seca para cada condición."</div>
+                    <div class="tags-sec">
+                        <span class="tag-sec">Columna</span>
+                        <span class="tag-sec">Hombro</span>
+                        <span class="tag-sec">Miofascial</span>
+                    </div>
+                </div>
+                <div class="vid-pill-sec">🎬 3</div>
+            </div>
+
+            <!-- Juan Morales -->
+            <div class="card-sec">
+                <div class="foto-sec">
+                    <img src="img/foto-bm.png" alt="Briguitt L. Martínez" class="foto-real">
+                </div>
+                <div class="info-sec">
+                    <div class="role-badge-sec">Fisioterapia</div>
+                    <div class="name-sec">Briguitt L. Martínez</div>
+                    <div class="title-sec">Fisioterapia, Rehabilitación y Enfermería</div>
+                    <div class="exp-sec">Especialista musculoesquelético</div>
+                    <div class="quote-sec">"Columna, articulaciones y tejidos blandos con precisión diagnóstica."</div>
+                    <div class="tags-sec">
+                        <span class="tag-sec">Columna</span>
+                        <span class="tag-sec">Hernia</span>
+                        <span class="tag-sec">Cadera</span>
+                    </div>
+                </div>
+                <div class="vid-pill-sec">🎬 5</div>
+            </div>
+
+            <!-- Rosa Medina -->
+            <div class="card-sec">
+                <div class="foto-sec">
+                    <img src="img/foto-ae.png" alt="Aurora Escudero" class="foto-real">
+                </div>
+                <div class="info-sec">
+                    <div class="role-badge-sec">Fisioterapia</div>
+                    <div class="name-sec">Aurora Escudero</div>
+                    <div class="title-sec">Fisioterapia y Rehabilitación</div>
+                    <div class="exp-sec">Especialista en rehabilitación</div>
+                    <div class="quote-sec">"Acompañamiento especializado durante el embarazo y el postparto."</div>
+                    <div class="tags-sec">
+                        <span class="tag-sec">Embarazo</span>
+                        <span class="tag-sec">Postparto</span>
+                        <span class="tag-sec">Suelo pélvico</span>
+                    </div>
+                </div>
+                <div class="vid-pill-sec">🎬 2</div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ======================== VALORES ======================== -->
+    <section class="valores-section">
+        <span class="section-tag">Lo que nos define</span>
+        <h2 class="section-title">Nuestros valores</h2>
+        <div class="valores-grid">
+            <div class="valor-card">
+                <h4>🔬 Evidencia científica</h4>
+                <p>Todos los protocolos están respaldados por investigación clínica actualizada y guías internacionales.</p>
+            </div>
+            <div class="valor-card">
+                <h4>🎯 Atención personalizada</h4>
+                <p>Cada paciente recibe un plan individualizado según su diagnóstico, objetivos y estilo de vida.</p>
+            </div>
+            <div class="valor-card">
+                <h4>⚡ Tecnología avanzada</h4>
+                <p>Ultrasonido terapéutico, láser, electroestimulación y crioterapia de última generación.</p>
+            </div>
+            <div class="valor-card">
+                <h4>📈 Seguimiento continuo</h4>
+                <p>Monitoreamos tu progreso en cada sesión y ajustamos el tratamiento para optimizar resultados.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== FOOTER ======================== -->
+    <footer>
+        <a class="logo footer-logo" href="index.html" style="text-decoration:none;">
+            <span class="logo-fisio" style="font-size:.95rem;">Fisio</span>
+            <span class="logo-salud" style="font-size:.95rem;">Salud</span>
+            <span class="logo-milagros" style="font-size:.52rem;">Milagros</span>
+        </a>
+        <span>© 2025 FisioSalud Milagros — Todos los derechos reservados</span>
+        <span>Lima, Perú · +51 921 720 767</span>
+    </footer>
+
+    <script src="js/nav.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/sheets.js"></script>
+
+</body>
+</html>

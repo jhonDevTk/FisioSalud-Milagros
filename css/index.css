@@ -1,0 +1,637 @@
+/* ============================================================
+   ESTILOS — index.html   (Mobile First)
+   FisioSalud Milagros
+   ============================================================ */
+
+/* ===================== HERO ===================== */
+
+.hero {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 3rem 1.2rem;
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease;
+}
+
+/* Luces decorativas de fondo */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -150px;
+    right: -150px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 229, 195, 0.07) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -120px;
+    left: -80px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(123, 108, 255, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.hero-inner {
+    max-width: 640px;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    margin-left: 0;
+    text-align: left;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 229, 195, 0.08);
+    border: 1px solid rgba(0, 229, 195, 0.22);
+    color: var(--accent);
+    padding: 5px 14px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+}
+
+.hero-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+}
+
+.hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.4rem, 8vw, 4.2rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.2rem;
+}
+
+.hero h1 .highlight {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-desc {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    max-width: 480px;
+}
+
+.hero-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+/* ===================== ESTADÍSTICAS ===================== */
+
+.stats-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.stat-item {
+    background: var(--bg);
+    padding: 1.4rem 1rem;
+    text-align: center;
+}
+
+.stat-item.full { grid-column: 1 / -1; }
+
+.stat-item .num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+
+.stat-item .label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+    display: block;
+}
+
+
+/* ===================== SERVICIOS ===================== */
+
+.services-section {
+    padding: 3rem 1rem;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.service-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 1.4rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    transition: border-color 0.25s, transform 0.25s;
+}
+
+.service-card:hover {
+    border-color: rgba(0, 229, 195, 0.28);
+    transform: translateY(-2px);
+}
+
+.service-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    background: rgba(0, 229, 195, 0.1);
+    border: 1px solid rgba(0, 229, 195, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.service-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.service-card p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.55;
+    font-weight: 300;
+}
+
+
+/* ===================== CARRUSEL ESPECIALISTAS ===================== */
+
+.specialists-section {
+    padding: 3rem 0;
+    overflow: hidden;
+}
+
+.specialists-head {
+    padding: 0 1rem;
+    margin-bottom: 1.2rem;
+}
+
+/* Outer con fade en costados */
+.carousel-outer {
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-outer::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 60px;
+    background: linear-gradient(to right, var(--bg), transparent);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.carousel-outer::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 60px;
+    background: linear-gradient(to left, var(--bg), transparent);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Track scrolleable */
+.carousel-track {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.5rem 60px 1.2rem;
+    scrollbar-width: none;
+    cursor: grab;
+}
+
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track:active { cursor: grabbing; }
+
+/* Tarjeta principal directora */
+.esp-card-main {
+    flex-shrink: 0;
+    width: 280px;
+    min-width: 280px;
+    background: linear-gradient(135deg, #0c1c17, #111126);
+    border: 1.5px solid rgba(0, 229, 195, 0.4);
+    border-radius: 18px;
+    display: flex;
+    align-items:center;
+    overflow: visible;
+    position: relative;
+    min-height: 168px;
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(0, 229, 195, 0.07);
+}
+
+.esp-card-main:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 36px rgba(0, 229, 195, 0.14);
+    border-color: rgba(0, 229, 195, 0.65);
+}
+
+/* Badge directora */
+.dir-tag {
+    position: absolute;
+    top: -1px;
+    left: 14px;
+    background: var(--accent);
+    color: #0a0a0f;
+    font-size: 0.54rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 0 0 7px 7px;
+    z-index: 3;
+}
+
+/* Tarjeta secundaria */
+.esp-card-sec {
+    flex-shrink: 0;
+    width: 210px;
+    min-width: 210px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    overflow: visible;
+    position: relative;
+    min-height: 144px;
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.esp-card-sec:hover {
+    transform: translateY(-4px);
+    border-color: rgba(123, 108, 255, 0.35);
+    box-shadow: 0 8px 24px rgba(123, 108, 255, 0.08);
+}
+
+/* Fotos de los especialistas */
+.esp-foto-main {
+    width: 110px;
+    height: 300px;
+    flex-shrink: 0;
+    border-radius: 14px 0 0 14px;
+    background: linear-gradient(180deg, rgba(0, 229, 195, 0.12) 0%, rgba(0, 229, 195, 0.02) 60%, transparent 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.esp-foto-main img,
+.esp-foto-sec img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+}
+
+.esp-foto-sec {
+    width: 88px;
+    height: 300px;
+    flex-shrink: 0;
+    border-radius: 12px 0 0 12px;
+    
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: visible;
+    position: relative;
+}
+
+/* Placeholder foto */
+.foto-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.foto-initials {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: rgba(0, 229, 195, 0.5);
+}
+
+.foto-initials-sec {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: rgba(123, 108, 255, 0.45);
+}
+
+.foto-label {
+    font-size: 0.55rem;
+    color: rgba(0, 229, 195, 0.3);
+    text-align: center;
+    line-height: 1.3;
+}
+
+/* Info tarjetas */
+.esp-info-main {
+    padding: 1.2rem 0.9rem 1rem 0.7rem;
+    flex: 1;
+}
+
+.esp-info-sec {
+    padding: 0.9rem 0.75rem 0.85rem 0.6rem;
+    flex: 1;
+}
+
+.esp-badge-main {
+    display: inline-flex;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    background: rgba(0, 229, 195, 0.1);
+    border: 1px solid rgba(0, 229, 195, 0.2);
+    color: var(--accent);
+    padding: 2px 9px;
+    border-radius: 100px;
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.45rem;
+}
+
+.esp-badge-sec {
+    display: inline-block;
+    background: rgba(123, 108, 255, 0.08);
+    border: 1px solid rgba(123, 108, 255, 0.18);
+    color: var(--accent2);
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 0.55rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.38rem;
+}
+
+.esp-name-main {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--text);
+    margin-bottom: 0.14rem;
+    line-height: 1.2;
+}
+
+.esp-name-sec {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    color: var(--text);
+    margin-bottom: 0.12rem;
+    line-height: 1.2;
+}
+
+.esp-role-main {
+    font-size: 0.66rem;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+}
+
+.esp-role-sec {
+    font-size: 0.62rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+}
+
+.esp-quote {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.7rem;
+    color: rgba(240, 240, 245, 0.5);
+    line-height: 1.45;
+    margin-bottom: 0.5rem;
+}
+
+/* Contador de videos */
+.vid-count-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0, 229, 195, 0.08);
+    border: 1px solid rgba(0, 229, 195, 0.18);
+    color: var(--accent);
+    padding: 3px 9px;
+    border-radius: 100px;
+    font-size: 0.62rem;
+    font-weight: 600;
+    margin-bottom: 0.45rem;
+    display: flex;
+    width: fit-content;
+}
+
+.vid-count-sec {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    color: var(--muted);
+    padding: 2px 7px;
+    border-radius: 100px;
+    font-size: 0.58rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    display: flex;
+    width: fit-content;
+}
+
+/* Botón ver evidencias */
+.ev-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+    padding: 6px 11px;
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ev-btn:hover {
+    background: #00c9aa;
+    transform: translateX(2px);
+}
+
+.ev-btn-sm {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ev-btn-sm:hover {
+    color: var(--accent2);
+    border-color: rgba(123, 108, 255, 0.3);
+}
+
+/* Dots indicadores */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 0.7rem;
+    padding: 0 1rem;
+}
+
+.c-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.c-dot.active {
+    width: 18px;
+    border-radius: 3px;
+    background: var(--accent);
+}
+
+.swipe-hint {
+    text-align: center;
+    font-size: 0.68rem;
+    color: var(--subtle);
+    margin-top: 0.4rem;
+    padding: 0 1rem;
+}
+
+
+/* ===================== RESPONSIVE INDEX ===================== */
+
+@media (min-width: 480px) {
+    .hero {
+        padding: 3.5rem 1.5rem;
+    }
+
+    .hero-actions {
+        flex-direction: row;
+    }
+
+    .stats-bar {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .stat-item.full {
+        grid-column: auto;
+    }
+
+    .stat-item .num {
+        font-size: 2.2rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .hero {
+        padding: 4rem 2rem;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .service-card {
+        flex-direction: column;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero {
+        padding: 4rem 3rem;
+        min-height: calc(100vh - 64px);
+        justify-content: flex-start;
+    }
+
+    .services-section {
+        padding: 4.5rem 2.5rem;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .specialists-section {
+        padding: 4rem 0;
+    }
+
+    .specialists-head {
+        padding: 0 2.5rem;
+    }
+}

@@ -1,0 +1,344 @@
+/* ============================================================
+   NAVEGACIÓN + WHATSAPP FLOTANTE — FisioSalud Milagros
+   ============================================================ */
+
+/* ===================== LOGO B4 ===================== */
+
+.logo {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    padding-bottom: 0.6rem;
+    padding-right: 0.4rem;
+    line-height: 1;
+}
+
+.logo-fisio {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    font-size: 1.15rem;
+}
+
+.logo-salud {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    font-size: 1.15rem;
+}
+
+.logo-milagros {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 0.65rem;
+    color: #f0f0f5;
+    -webkit-text-stroke: 0.4px #7b6cff;
+    text-shadow: 0 0 12px rgba(123, 108, 255, 0.4);
+    position: absolute;
+    bottom: 0;
+    right: -0.15rem;
+    transform: rotate(-9deg);
+    transform-origin: left bottom;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+
+/* ===================== NAVEGACIÓN PC ===================== */
+
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 10, 15, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 64px;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+}
+
+.nav-tabs li a {
+    display: block;
+    padding: 7px 16px;
+    border-radius: var(--r-sm);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.nav-tabs li a:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-tabs li a.active {
+    color: var(--accent);
+    background: rgba(0, 229, 195, 0.08);
+    border-color: rgba(0, 229, 195, 0.2);
+}
+
+.nav-cta {
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+    padding: 9px 18px;
+    border-radius: var(--r-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.nav-cta:hover {
+    background: #00c9aa;
+    transform: translateY(-1px);
+}
+
+
+/* ===================== MENÚ HAMBURGUESA ===================== */
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 101;
+}
+
+.ham-line {
+    width: 22px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    display: block;
+    transition: all 0.3s;
+    transform-origin: center;
+}
+
+.hamburger.open .ham-line:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.open .ham-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.hamburger.open .ham-line:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Menú móvil desplegable */
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 15, 0.98);
+    border-bottom: 1px solid var(--border);
+    z-index: 99;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+}
+
+.mobile-menu.open {
+    max-height: 300px;
+}
+
+.mobile-menu a {
+    display: block;
+    padding: 14px 1.5rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.2s;
+}
+
+.mobile-menu a:hover,
+.mobile-menu a.active {
+    color: var(--accent);
+    background: rgba(0, 229, 195, 0.04);
+    padding-left: 2rem;
+}
+
+.mobile-menu .mob-cta {
+    display: block;
+    margin: 1rem 1.5rem;
+    background: var(--accent);
+    color: #0a0a0f;
+    text-align: center;
+    padding: 12px;
+    border-radius: var(--r-md);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border-bottom: none;
+}
+
+.mobile-menu .mob-cta:hover {
+    background: #00c9aa;
+    padding-left: 1.5rem;
+}
+
+
+/* ===================== WHATSAPP FLOTANTE ===================== */
+
+.wa-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.wa-bubble {
+    background: #141e18;
+    border: 1px solid rgba(37, 211, 102, 0.3);
+    border-radius: 14px;
+    padding: 12px 16px;
+    max-width: 230px;
+    font-size: 0.8rem;
+    color: #c8f0d4;
+    line-height: 1.55;
+    display: none;
+    animation: popUp 0.25s ease;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+}
+
+.wa-bubble strong {
+    display: block;
+    color: #25D366;
+    margin-bottom: 3px;
+    font-size: 0.84rem;
+}
+
+.wa-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--wa);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 18px rgba(37, 211, 102, 0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.wa-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 26px rgba(37, 211, 102, 0.58);
+}
+
+.wa-btn svg {
+    width: 28px;
+    height: 28px;
+}
+
+.wa-ping {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #ff4d6d;
+    border: 2px solid #0a0a0f;
+    animation: pulse 2s infinite;
+}
+
+
+/* ===================== RESPONSIVE NAV ===================== */
+
+@media (max-width: 768px) {
+    nav {
+        padding: 0 1rem;
+    }
+
+    .nav-tabs,
+    .nav-cta {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .wa-float {
+        bottom: 16px;
+        right: 16px;
+    }
+
+    .wa-btn {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+
+/* ===================== BOTÓN PANEL ===================== */
+
+.nav-panel-btn {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    border-radius: var(--r-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-panel-btn:hover {
+    color: var(--accent);
+    border-color: rgba(0, 229, 195, 0.3);
+    background: rgba(0, 229, 195, 0.05);
+}
+
+@media (max-width: 768px) {
+    .nav-panel-btn { display: none; }
+}
