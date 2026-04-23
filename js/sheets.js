@@ -1,14 +1,14 @@
 /* ============================================================
-   sheets.js v5 — FisioSalud Milagros
+   sheets.js v6 — FisioSalud Milagros
    - Fetch CSV con caché en localStorage
    - Si falla el fetch, usa datos guardados anteriormente
-   - Los videos nunca desaparecen
+   - writeToSheet usa POST para datos grandes (fotos)
    ============================================================ */
 
-var CACHE_MINUTES = 30; /* Minutos que dura la caché */
+var CACHE_MINUTES = 30;
 
 /* ============================================================
-   LEER DATOS — Fetch CSV con caché
+   LEER DATOS
    ============================================================ */
 
 function readSheet(sheetName, callback) {
@@ -18,12 +18,10 @@ function readSheet(sheetName, callback) {
     }
 
     var cacheKey = 'fsm_cache_' + sheetName;
-    var cacheTimeKey = 'fsm_cache_time_' + sheetName;
 
-    /* Intentar fetch del Sheets */
     var url = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID
             + '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(sheetName)
-            + '&t=' + Date.now(); /* Evitar caché del navegador */
+            + '&t=' + Date.now();
 
     fetch(url, { cache: 'no-store' })
         .then(function(response) {
@@ -31,38 +29,22 @@ function readSheet(sheetName, callback) {
             return response.text();
         })
         .then(function(csvText) {
-            /* Verificar que recibimos datos reales (no página de error) */
             if (!csvText || csvText.trim().length < 10 || csvText.includes('<!DOCTYPE')) {
                 throw new Error('Respuesta inválida del Sheets');
             }
-
             var result = parseCSV(csvText);
-
             if (result.length > 0) {
-                /* Guardar en caché local */
-                try {
-                    localStorage.setItem(cacheKey, JSON.stringify(result));
-                    localStorage.setItem(cacheTimeKey, Date.now().toString());
-                } catch(e) {}
-                console.log('✅ Sheets leído OK (' + sheetName + '):', result.length, 'filas');
+                try { localStorage.setItem(cacheKey, JSON.stringify(result)); } catch(e) {}
                 callback(result, null);
             } else {
-                /* Sin datos — usar caché */
                 var cached = getCached(cacheKey);
-                if (cached) {
-                    console.log('📦 Usando caché (' + sheetName + '):', cached.length, 'filas');
-                    callback(cached, null);
-                } else {
-                    callback([], null);
-                }
+                callback(cached || [], null);
             }
         })
         .catch(function(err) {
-            console.warn('⚠️ Fetch error (' + sheetName + '):', err.message);
-            /* Usar caché local si existe */
+            console.warn('Fetch error (' + sheetName + '):', err.message);
             var cached = getCached(cacheKey);
             if (cached && cached.length > 0) {
-                console.log('📦 Usando caché por error (' + sheetName + '):', cached.length, 'filas');
                 callback(cached, null);
             } else {
                 callback(null, 'FETCH_ERROR');
@@ -77,23 +59,28 @@ function getCached(key) {
     } catch(e) { return null; }
 }
 
-/* Parsear CSV respetando comillas */
 function parseCSV(text) {
+    /* Eliminar BOM UTF-8 que Google Sheets a veces incluye */
+    text = text.replace(/^\uFEFF/, '');
+
     var lines = text.trim().split('\n');
     if (lines.length < 2) return [];
 
-    var headers = parseCSVLine(lines[0]);
-    var result  = [];
+    /* Limpiar headers: quitar espacios y comillas residuales */
+    var headers = parseCSVLine(lines[0]).map(function(h) {
+        return h.trim().replace(/^["'\s]+|["'\s]+$/g, '');
+    });
 
+    console.log('📋 CSV headers:', headers);
+
+    var result  = [];
     for (var i = 1; i < lines.length; i++) {
         var values = parseCSVLine(lines[i]);
         if (!values.length) continue;
-
         var obj = {};
         headers.forEach(function(h, idx) {
-            obj[h.trim()] = values[idx] !== undefined ? values[idx].trim() : '';
+            obj[h] = values[idx] !== undefined ? values[idx].trim() : '';
         });
-
         if (Object.values(obj).some(function(v) { return v !== ''; })) {
             result.push(obj);
         }
@@ -102,14 +89,13 @@ function parseCSV(text) {
 }
 
 function parseCSVLine(line) {
-    var result = [];
-    var current = '';
+    var result   = [];
+    var current  = '';
     var inQuotes = false;
-
     for (var i = 0; i < line.length; i++) {
         var ch = line[i];
         if (ch === '"') {
-            if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
+            if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
             else { inQuotes = !inQuotes; }
         } else if (ch === ',' && !inQuotes) {
             result.push(current.trim());
@@ -124,7 +110,9 @@ function parseCSVLine(line) {
 
 
 /* ============================================================
-   ESCRIBIR DATOS — GET al Apps Script
+   ESCRIBIR DATOS
+   — usa POST cuando el payload tiene fotos (>4 KB)
+   — usa GET para el resto
    ============================================================ */
 
 function writeToSheet(payload, callback) {
@@ -134,32 +122,65 @@ function writeToSheet(payload, callback) {
         return;
     }
 
-    var params = 'action=' + encodeURIComponent(payload.action)
-               + '&sheet='  + encodeURIComponent(payload.sheet);
+    /* Respaldo local inmediato */
+    saveLocalFallback(payload);
 
-    if (payload.action === 'add' && payload.row) {
-        params += '&data=' + encodeURIComponent(JSON.stringify(payload.row));
-    } else if (payload.action === 'delete') {
-        params += '&id=' + encodeURIComponent(payload.id);
-    } else if (payload.action === 'update') {
-        params += '&id='   + encodeURIComponent(payload.id);
-        params += '&data=' + encodeURIComponent(JSON.stringify(payload.row));
-    } else if (payload.action === 'replace') {
-        params += '&data=' + encodeURIComponent(JSON.stringify({ rows: payload.rows }));
-    }
+    /* ¿Tiene fotos? */
+    var esPesado = payload.row && JSON.stringify(payload.row).length > 4000;
 
-    var url = WEBHOOK_URL + '?' + params;
+    if (esPesado) {
+        /* POST para registros con fotos — envía JSON crudo en el body */
+        var postBody = {
+            action: payload.action,
+            sheet:  payload.sheet
+        };
+        if (payload.action === 'add')    postBody.row  = payload.row;
+        if (payload.action === 'update') postBody.row  = payload.row;
+        if (payload.action === 'update') postBody.id   = payload.id;
+        if (payload.action === 'delete') postBody.id   = payload.id;
+        if (payload.action === 'replace') postBody.rows = payload.rows;
 
-    fetch(url, { method: 'GET', mode: 'no-cors' })
-        .then(function() {
-            saveLocalFallback(payload);
-            /* Limpiar caché para forzar re-lectura */
-            try { localStorage.removeItem('fsm_cache_' + payload.sheet); } catch(e) {}
-            callback({ ok: true });
+        fetch(WEBHOOK_URL, {
+            method:  'POST',
+            mode:    'no-cors',
+            headers: { 'Content-Type': 'text/plain' }, /* text/plain evita preflight CORS */
+            body:    JSON.stringify(postBody)
         })
-        .catch(function() {
-            writeWithScript(url, payload, callback);
-        });
+            .then(function() {
+                try { localStorage.removeItem('fsm_cache_' + payload.sheet); } catch(e) {}
+                callback({ ok: true });
+            })
+            .catch(function() {
+                callback({ ok: true, local: true });
+            });
+
+    } else {
+        /* GET normal */
+        var params = 'action=' + encodeURIComponent(payload.action)
+                   + '&sheet='  + encodeURIComponent(payload.sheet);
+
+        if (payload.action === 'add' && payload.row) {
+            params += '&data=' + encodeURIComponent(JSON.stringify(payload.row));
+        } else if (payload.action === 'delete') {
+            params += '&id=' + encodeURIComponent(payload.id);
+        } else if (payload.action === 'update') {
+            params += '&id='   + encodeURIComponent(payload.id);
+            params += '&data=' + encodeURIComponent(JSON.stringify(payload.row));
+        } else if (payload.action === 'replace') {
+            params += '&data=' + encodeURIComponent(JSON.stringify({ rows: payload.rows }));
+        }
+
+        var url = WEBHOOK_URL + '?' + params;
+
+        fetch(url, { method: 'GET', mode: 'no-cors' })
+            .then(function() {
+                try { localStorage.removeItem('fsm_cache_' + payload.sheet); } catch(e) {}
+                callback({ ok: true });
+            })
+            .catch(function() {
+                writeWithScript(url, payload, callback);
+            });
+    }
 }
 
 function writeWithScript(url, payload, callback) {
@@ -169,7 +190,6 @@ function writeWithScript(url, payload, callback) {
     window[cbName] = function(data) {
         delete window[cbName];
         if (document.head.contains(script)) document.head.removeChild(script);
-        saveLocalFallback(payload);
         try { localStorage.removeItem('fsm_cache_' + payload.sheet); } catch(e) {}
         callback(data || { ok: true });
     };
@@ -177,7 +197,6 @@ function writeWithScript(url, payload, callback) {
     script.onerror = function() {
         delete window[cbName];
         if (document.head.contains(script)) document.head.removeChild(script);
-        saveLocalFallback(payload);
         callback({ ok: true, local: true });
     };
 
@@ -187,7 +206,6 @@ function writeWithScript(url, payload, callback) {
     setTimeout(function() {
         if (window[cbName]) {
             delete window[cbName];
-            saveLocalFallback(payload);
             callback({ ok: true, local: true, timeout: true });
         }
     }, 8000);
@@ -203,18 +221,42 @@ function saveLocalFallback(payload) {
         var key  = 'fsm_' + payload.sheet;
         var data = JSON.parse(localStorage.getItem(key) || '[]');
 
+        /* Si el registro tiene fotos en base64, no las guardamos
+           en localStorage — ya van a Drive vía el Apps Script.
+           Solo guardamos la URL si ya viene como enlace de Drive. */
+        function limpiarFotos(row) {
+            if (!row) return row;
+            var r = Object.assign({}, row);
+            for (var n = 1; n <= 5; n++) {
+                var campo = 'foto' + n;
+                if (r[campo] && r[campo].startsWith('data:')) {
+                    r[campo] = ''; /* quitar base64, Drive guardará la URL real */
+                }
+            }
+            /* también limpiar campo "foto" legacy */
+            if (r.foto && r.foto.startsWith('data:')) r.foto = '';
+            return r;
+        }
+
         if (payload.action === 'add') {
-            if (!payload.row.id) payload.row.id = Date.now();
-            var exists = data.some(function(r) { return String(r.id) === String(payload.row.id); });
-            if (!exists) data.push(payload.row);
+            var row = limpiarFotos(payload.row);
+            if (!row.id) row.id = Date.now();
+            var exists = data.some(function(r) {
+                return String(r.id) === String(row.id);
+            });
+            if (!exists) data.push(row);
         } else if (payload.action === 'delete') {
-            data = data.filter(function(r) { return String(r.id) !== String(payload.id); });
+            data = data.filter(function(r) {
+                return String(r.id) !== String(payload.id);
+            });
         } else if (payload.action === 'update') {
+            var upd = limpiarFotos(payload.row);
             data = data.map(function(r) {
-                return String(r.id) === String(payload.id) ? Object.assign({}, r, payload.row) : r;
+                return String(r.id) === String(payload.id)
+                    ? Object.assign({}, r, upd) : r;
             });
         } else if (payload.action === 'replace') {
-            data = payload.rows || [];
+            data = (payload.rows || []).map(limpiarFotos);
         }
 
         localStorage.setItem(key, JSON.stringify(data));
@@ -269,10 +311,8 @@ function getData(sheet, callback) {
 
     readSheet(SHEETS[sheet] || sheet, function(data, err) {
         if (err || !data || data.length === 0) {
-            /* Intentar fallback local primero */
             var local = readLocalFallback(sheet);
             if (local.length > 0) {
-                console.log('📦 Usando localStorage (' + sheet + '):', local.length, 'items');
                 callback(local);
             } else {
                 callback(DEFAULT_DATA[sheet] || []);

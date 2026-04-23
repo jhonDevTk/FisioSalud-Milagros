@@ -7,30 +7,50 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/admin.css">
     <style>
-        .admin-content{max-width:700px;}
-        .esp-bienvenida{background:linear-gradient(135deg,#0c1c17,#111126);border:1.5px solid rgba(0,229,195,.3);border-radius:16px;padding:1.4rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:14px;}
-        .esp-av-grande{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(0,229,195,.2),rgba(0,229,195,.05));border:2px solid rgba(0,229,195,.35);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--accent);flex-shrink:0;}
-        .esp-bienvenida h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.2rem;}
-        .esp-bienvenida p{font-size:.76rem;color:var(--muted);}
-        .pasos-lista{background:rgba(0,229,195,.04);border:1px solid rgba(0,229,195,.12);border-radius:10px;padding:1rem;margin-bottom:1.2rem;}
-        .pasos-lista p{font-size:.76rem;color:var(--muted);margin-bottom:.3rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
-        .paso-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:.78rem;color:var(--muted);}
-        .paso-num{width:22px;height:22px;border-radius:50%;background:rgba(0,229,195,.12);border:1px solid rgba(0,229,195,.22);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--accent);flex-shrink:0;}
-        .nota-aprobacion{background:rgba(239,159,39,.07);border:1px solid rgba(239,159,39,.22);border-radius:9px;padding:.85rem 1rem;margin-bottom:1rem;font-size:.75rem;color:#ef9f27;line-height:1.55;}
-        .vid-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;}
-        .vid-thumb-mini{width:64px;height:42px;border-radius:6px;background:var(--bg4);flex-shrink:0;overflow:hidden;}
-        .vid-thumb-mini img{width:100%;height:100%;object-fit:cover;}
-        .vid-info{flex:1;min-width:0;}
-        .vid-titulo{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .vid-meta{font-size:.7rem;color:var(--muted);margin-top:2px;}
-        .estado-pub{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:100px;text-transform:uppercase;flex-shrink:0;}
-        .pub{background:rgba(0,229,195,.1);border:1px solid rgba(0,229,195,.2);color:var(--accent);}
-        .pend{background:rgba(239,159,39,.1);border:1px solid rgba(239,159,39,.2);color:#ef9f27;}
-        @media(max-width:480px){.admin-form-row{grid-template-columns:1fr;}}
+        .admin-content { max-width: 720px; }
+        .esp-bienvenida { background:linear-gradient(135deg,#0c1c17,#111126); border:1.5px solid rgba(0,229,195,.3); border-radius:16px; padding:1.4rem; margin-bottom:1.2rem; display:flex; align-items:center; gap:14px; }
+        .esp-av { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,rgba(0,229,195,.2),rgba(0,229,195,.05)); border:2px solid rgba(0,229,195,.35); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; color:var(--accent); flex-shrink:0; }
+        .esp-bienvenida h3 { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; margin-bottom:.2rem; }
+        .esp-bienvenida p { font-size:.76rem; color:var(--muted); }
+
+        /* Tabs del panel del especialista */
+        .esp-tabs { display:flex; gap:6px; margin-bottom:1.3rem; background:var(--bg3); border:1px solid var(--border); border-radius:var(--r-lg); padding:5px; }
+        .esp-tab { flex:1; padding:9px 10px; border-radius:var(--r-sm); border:none; background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.78rem; font-weight:500; cursor:pointer; transition:all .2s; text-align:center; }
+        .esp-tab.active { background:var(--accent); color:#0a0a0f; font-weight:700; }
+        .esp-panel { display:none; animation:fadeIn .3s ease; }
+        .esp-panel.active { display:block; }
+
+        /* Pasos */
+        .pasos-lista { background:rgba(0,229,195,.04); border:1px solid rgba(0,229,195,.12); border-radius:10px; padding:1rem; margin-bottom:1.2rem; }
+        .pasos-lista p { font-size:.76rem; color:var(--muted); margin-bottom:.3rem; font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+        .paso-item { display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; font-size:.78rem; color:var(--muted); }
+        .paso-num { width:22px; height:22px; border-radius:50%; background:rgba(0,229,195,.12); border:1px solid rgba(0,229,195,.22); display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:700; color:var(--accent); flex-shrink:0; }
+
+        /* Videos */
+        .vid-item { display:flex; align-items:center; gap:12px; padding:10px 12px; background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:10px; margin-bottom:8px; }
+        .vid-thumb-mini { width:64px; height:42px; border-radius:6px; background:var(--bg4); flex-shrink:0; overflow:hidden; }
+        .vid-thumb-mini img { width:100%; height:100%; object-fit:cover; }
+        .vid-info { flex:1; min-width:0; }
+        .vid-titulo { font-size:.82rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .vid-meta { font-size:.7rem; color:var(--muted); margin-top:2px; }
+        .estado-pub { font-size:.62rem; font-weight:700; padding:2px 8px; border-radius:100px; text-transform:uppercase; flex-shrink:0; }
+        .pub { background:rgba(0,229,195,.1); border:1px solid rgba(0,229,195,.2); color:var(--accent); }
+        .pend { background:rgba(239,159,39,.1); border:1px solid rgba(239,159,39,.2); color:#ef9f27; }
+
+        /* Pacientes registrados por este especialista */
+        .pac-row { display:flex; align-items:center; gap:10px; padding:9px 12px; background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:10px; margin-bottom:7px; font-size:.8rem; }
+        .pac-code { font-family:monospace; font-size:.75rem; color:var(--accent); background:rgba(0,229,195,.08); padding:2px 8px; border-radius:5px; flex-shrink:0; }
+        .pac-nombre { flex:1; font-weight:500; }
+        .pac-fecha { font-size:.72rem; color:var(--muted); flex-shrink:0; }
+        .badge-activo { background:rgba(0,229,195,.1); border:1px solid rgba(0,229,195,.25); color:var(--accent); font-size:.6rem; font-weight:700; padding:2px 8px; border-radius:100px; text-transform:uppercase; }
+        .badge-alta   { background:rgba(123,108,255,.1); border:1px solid rgba(123,108,255,.25); color:var(--accent2); font-size:.6rem; font-weight:700; padding:2px 8px; border-radius:100px; text-transform:uppercase; }
+
+        @media(max-width:480px){ .admin-form-row{grid-template-columns:1fr;} .esp-tabs{flex-direction:column;} }
     </style>
 </head>
 <body>
 <div class="admin-layout visible">
+
     <header class="admin-header">
         <div class="admin-header-left">
             <div style="position:relative;display:inline-block;padding-bottom:.55rem;padding-right:.35rem;">
@@ -42,65 +62,184 @@
         </div>
         <button class="logout-btn" onclick="doLogout()">Cerrar sesión</button>
     </header>
+
     <div class="admin-content">
+
+        <!-- Bienvenida -->
         <div class="esp-bienvenida">
-            <div class="esp-av-grande" id="espAvatar">?</div>
+            <div class="esp-av" id="espAvatar">?</div>
             <div>
                 <h3 id="espNombreTitle">Cargando...</h3>
                 <p id="espEspTitle">Panel de especialista</p>
             </div>
         </div>
-        <div class="admin-card">
-            <div class="admin-card-header">
-                <span class="admin-card-title">🎬 Subir nuevo caso clínico</span>
-            </div>
-            <div class="pasos-lista">
-                <p>Cómo subir tu video:</p>
-                <div class="paso-item"><div class="paso-num">1</div><span>Graba el video del caso tratado</span></div>
-                <div class="paso-item"><div class="paso-num">2</div><span>Súbelo a YouTube (puede ser privado o no listado)</span></div>
-                <div class="paso-item"><div class="paso-num">3</div><span>Copia el link y pégalo abajo</span></div>
-            </div>
-            <div class="admin-form-group">
-                <label>Link de YouTube</label>
-                <input class="admin-input" id="vid-url" placeholder="https://www.youtube.com/watch?v=..." oninput="previewYT()">
-            </div>
-            <div id="ytPreview" style="display:none;margin-bottom:12px;">
-                <img id="ytThumb" src="" alt="Preview" style="width:100%;max-width:320px;border-radius:10px;border:1px solid var(--border);">
-                <p style="font-size:.72rem;color:var(--accent);margin-top:4px;">✅ Video detectado</p>
-            </div>
-            <div class="admin-form-row">
+
+        <!-- Tabs -->
+        <div class="esp-tabs">
+            <button class="esp-tab active" onclick="switchEspTab('pacientes',this)">🗂️ Registrar paciente</button>
+            <button class="esp-tab" onclick="switchEspTab('videos',this)">🎬 Subir video</button>
+            <button class="esp-tab" onclick="switchEspTab('misregistros',this)">📋 Mis registros</button>
+        </div>
+
+
+        <!-- ===== PANEL: REGISTRAR PACIENTE ===== -->
+        <div class="esp-panel active" id="espPanel-pacientes">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <span class="admin-card-title">📝 Registrar atención de paciente</span>
+                </div>
+
+                <!-- Código automático -->
                 <div class="admin-form-group">
-                    <label>Título del caso</label>
-                    <input class="admin-input" id="vid-titulo" placeholder="Ej: Rehabilitación post-cirugía">
+                    <label>Código del paciente (generado automáticamente)</label>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <input
+                            class="admin-input"
+                            id="p-codigo"
+                            readonly
+                            style="flex:1;background:rgba(0,229,195,.05);border-color:rgba(0,229,195,.3);
+                                   font-family:monospace;font-size:.95rem;letter-spacing:.08em;color:var(--accent);"
+                        >
+                        <button
+                            onclick="regenerarCodigoEsp()"
+                            style="background:rgba(0,229,195,.1);border:1px solid rgba(0,229,195,.3);
+                                   color:var(--accent);border-radius:var(--r-sm);padding:10px 13px;
+                                   cursor:pointer;font-size:.8rem;white-space:nowrap;"
+                        >🔄 Nuevo</button>
+                        <button
+                            onclick="copiarCodigoEsp()"
+                            style="background:rgba(0,229,195,.1);border:1px solid rgba(0,229,195,.3);
+                                   color:var(--accent);border-radius:var(--r-sm);padding:10px 13px;
+                                   cursor:pointer;font-size:.8rem;white-space:nowrap;"
+                        >📋 Copiar</button>
+                    </div>
+                    <p style="font-size:.7rem;color:var(--muted);margin-top:5px;line-height:1.5;">
+                        ℹ️ Entrega este código al paciente para que consulte su historial en
+                        <strong style="color:var(--text);">pacientes.html</strong>.
+                    </p>
+                </div>
+
+                <div class="admin-form-row">
+                    <div class="admin-form-group">
+                        <label>Fecha de atención *</label>
+                        <input class="admin-input" id="p-fecha" type="date">
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Nombre completo *</label>
+                        <input class="admin-input" id="p-nombre" placeholder="Ej: Juan Pérez">
+                    </div>
+                </div>
+                <div class="admin-form-row">
+                    <div class="admin-form-group">
+                        <label>Edad</label>
+                        <input class="admin-input" id="p-edad" type="number" placeholder="Ej: 35">
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Género</label>
+                        <select class="admin-select" id="p-genero">
+                            <option value="">— seleccionar —</option>
+                            <option>Masculino</option>
+                            <option>Femenino</option>
+                            <option>Otro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="admin-form-row">
+                    <div class="admin-form-group">
+                        <label>Teléfono</label>
+                        <input class="admin-input" id="p-telefono" type="tel" placeholder="Ej: 999 888 777">
+                    </div>
+                    <div class="admin-form-group">
+                        <label>Estado</label>
+                        <select class="admin-select" id="p-estado">
+                            <option value="Activo">Activo</option>
+                            <option value="Alta">Alta</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="admin-form-group">
-                    <label>Categoría</label>
-                    <select class="admin-select" id="vid-cat">
-                        <option>Neurológico</option><option>Deportivo</option><option>Manual</option>
-                        <option>Musculoesq.</option><option>Obstétrico</option><option>Postquirúrgico</option><option>General</option>
-                    </select>
+                    <label>Diagnóstico</label>
+                    <textarea class="admin-input admin-textarea" id="p-diagnostico" placeholder="Describe el diagnóstico..."></textarea>
                 </div>
+                <div class="admin-form-group">
+                    <label>Tratamiento</label>
+                    <textarea class="admin-input admin-textarea" id="p-tratamiento" placeholder="Protocolo aplicado..."></textarea>
+                </div>
+                <div class="admin-form-group">
+                    <label>Fotos del paciente (máx. 5 — controles, radiografías, recetas…)</label>
+                    <input
+                        class="admin-input"
+                        id="p-fotos"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onchange="previsualizarFotosEsp(this)"
+                    >
+                    <div id="p-fotos-preview" style="display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;"></div>
+                </div>
+
+                <button class="btn-add" onclick="registrarPaciente()" style="width:100%;padding:13px;justify-content:center;">
+                    💾 Guardar atención
+                </button>
             </div>
-            <div class="admin-form-group">
-                <label>Descripción del caso y resultado</label>
-                <textarea class="admin-input admin-textarea" id="vid-desc" placeholder="Describe el diagnóstico, protocolo y resultado..."></textarea>
-            </div>
-            <div class="nota-aprobacion" style="background:rgba(0,229,195,.07);border-color:rgba(0,229,195,.22);color:var(--accent);">✅ <strong>Publicación inmediata:</strong> Tu video aparecerá directamente en la página de evidencias. La supervisora puede eliminarlo si es necesario.</div>
-            <button class="btn-add" onclick="subirVideo()" style="width:100%;padding:13px;font-size:.88rem;justify-content:center;">📤 Enviar para aprobación</button>
         </div>
-        <div class="admin-card">
-            <div class="admin-card-header">
-                <span class="admin-card-title">📋 Mis videos</span>
-                <span style="font-size:.72rem;color:var(--muted);" id="contadorVids">Cargando...</span>
+
+
+        <!-- ===== PANEL: SUBIR VIDEO ===== -->
+        <div class="esp-panel" id="espPanel-videos">
+            <div class="admin-card">
+                <div class="admin-card-header"><span class="admin-card-title">🎬 Subir nuevo caso clínico</span></div>
+                <div class="pasos-lista">
+                    <p>Cómo subir tu video:</p>
+                    <div class="paso-item"><div class="paso-num">1</div><span>Graba el video del caso tratado</span></div>
+                    <div class="paso-item"><div class="paso-num">2</div><span>Súbelo a YouTube (puede ser privado o no listado)</span></div>
+                    <div class="paso-item"><div class="paso-num">3</div><span>Copia el link y pégalo abajo</span></div>
+                </div>
+                <div class="admin-form-group"><label>Link de YouTube</label><input class="admin-input" id="vid-url" placeholder="https://www.youtube.com/watch?v=..." oninput="previewYT()"></div>
+                <div id="ytPreview" style="display:none;margin-bottom:12px;">
+                    <img id="ytThumb" src="" alt="Preview" style="width:100%;max-width:320px;border-radius:10px;border:1px solid var(--border);">
+                    <p style="font-size:.72rem;color:var(--accent);margin-top:4px;">✅ Video detectado</p>
+                </div>
+                <div class="admin-form-row">
+                    <div class="admin-form-group"><label>Título del caso</label><input class="admin-input" id="vid-titulo" placeholder="Ej: Rehabilitación post-cirugía"></div>
+                    <div class="admin-form-group"><label>Categoría</label>
+                        <select class="admin-select" id="vid-cat"><option>Neurológico</option><option>Deportivo</option><option>Manual</option><option>Musculoesq.</option><option>Obstétrico</option><option>Postquirúrgico</option><option>General</option></select>
+                    </div>
+                </div>
+                <div class="admin-form-group"><label>Descripción del caso y resultado</label><textarea class="admin-input admin-textarea" id="vid-desc" placeholder="Describe el diagnóstico, protocolo y resultado..."></textarea></div>
+                <div style="background:rgba(0,229,195,.07);border:1px solid rgba(0,229,195,.22);border-radius:9px;padding:.85rem 1rem;margin-bottom:1rem;font-size:.75rem;color:var(--accent);">✅ <strong>Publicación inmediata:</strong> Tu video aparecerá directamente en la página de evidencias.</div>
+                <button class="btn-add" onclick="subirVideo()" style="width:100%;padding:13px;justify-content:center;">📤 Publicar video</button>
             </div>
-            <div id="misVideosList"><p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem;">Cargando...</p></div>
+
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <span class="admin-card-title">📋 Mis videos</span>
+                    <span style="font-size:.72rem;color:var(--muted);" id="contadorVids">Cargando...</span>
+                </div>
+                <div id="misVideosList"><p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem;">Cargando...</p></div>
+            </div>
         </div>
+
+
+        <!-- ===== PANEL: MIS REGISTROS ===== -->
+        <div class="esp-panel" id="espPanel-misregistros">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <span class="admin-card-title">📋 Atenciones que registré</span>
+                    <span style="font-size:.72rem;color:var(--muted);" id="contMisReg">Cargando...</span>
+                </div>
+                <div id="listaMisReg"><p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem;">Cargando...</p></div>
+            </div>
+        </div>
+
     </div>
 </div>
+
 <div class="admin-toast" id="adminToast"></div>
 <script src="js/config.js"></script>
 <script src="js/sheets.js"></script>
 <script>
+
 var sesionId = '', sesionNombre = '';
 try {
     if (sessionStorage.getItem('fsm_rol') !== 'especialista') { window.location.href = 'acceso.html'; }
@@ -111,17 +250,200 @@ try {
 window.addEventListener('load', function() {
     var esp = ESPECIALISTAS_DEFAULT.find(function(e){ return e.id === sesionId; });
     if (esp) {
-        document.getElementById('espAvatar').textContent = esp.iniciales;
+        document.getElementById('espAvatar').textContent      = esp.iniciales;
         document.getElementById('espNombreTitle').textContent = esp.nombre;
-        document.getElementById('espEspTitle').textContent = esp.especialidad;
+        document.getElementById('espEspTitle').textContent    = esp.especialidad;
     } else {
         document.getElementById('espNombreTitle').textContent = sesionNombre;
     }
+    document.getElementById('p-fecha').value  = new Date().toISOString().split('T')[0];
+    document.getElementById('p-codigo').value = generarCodigoUnicoEsp();
     cargarMisVideos();
+    cargarMisRegistros();
 });
+
+/* ---- Tabs ---- */
+function switchEspTab(tab, btn) {
+    document.querySelectorAll('.esp-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.esp-panel').forEach(function(p){ p.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('espPanel-' + tab).classList.add('active');
+    if (tab === 'misregistros') cargarMisRegistros();
+    if (tab === 'videos') cargarMisVideos();
+}
 
 function doLogout() { try{ sessionStorage.clear(); }catch(e){} window.location.href = 'acceso.html'; }
 
+/* ---- Generador de código único (consulta registros locales) ---- */
+var pacientesEspData = [];
+
+function generarCodigoUnicoEsp() {
+    var usados = {};
+    pacientesEspData.forEach(function(r) {
+        usados[r.codigo || r.Codigo || ''] = true;
+    });
+    var intento;
+    do {
+        var longitud = 6 + Math.floor(Math.random() * 5);
+        intento = '';
+        for (var i = 0; i < longitud; i++) intento += Math.floor(Math.random() * 10);
+    } while (usados[intento]);
+    return intento;
+}
+
+function regenerarCodigoEsp() {
+    document.getElementById('p-codigo').value = generarCodigoUnicoEsp();
+}
+
+function copiarCodigoEsp() {
+    var val = document.getElementById('p-codigo').value;
+    if (!val) return;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(val).then(function() { showToast('📋 Código copiado: ' + val); });
+    } else {
+        var t = document.createElement('textarea');
+        t.value = val; document.body.appendChild(t); t.select();
+        document.execCommand('copy'); document.body.removeChild(t);
+        showToast('📋 Código copiado: ' + val);
+    }
+}
+
+function previsualizarFotosEsp(input) {
+    var preview  = document.getElementById('p-fotos-preview');
+    preview.innerHTML = '';
+    var archivos = Array.from(input.files).slice(0, 5);
+    archivos.forEach(function(file, i) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var div = document.createElement('div');
+            div.style.cssText = 'position:relative;width:60px;height:60px;border-radius:8px;overflow:hidden;' +
+                                'border:1.5px solid var(--border);background:var(--bg4);';
+            var img  = document.createElement('img');
+            img.src  = e.target.result;
+            img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+            var num  = document.createElement('span');
+            num.textContent = i + 1;
+            num.style.cssText = 'position:absolute;bottom:2px;right:4px;font-size:.6rem;font-weight:700;' +
+                                'color:var(--accent);background:rgba(0,0,0,.6);border-radius:3px;padding:1px 3px;';
+            div.appendChild(img); div.appendChild(num);
+            preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+/* ---- Registrar paciente ---- */
+function registrarPaciente() {
+    var codigo = document.getElementById('p-codigo').value.trim();
+    var fecha  = document.getElementById('p-fecha').value;
+    var nombre = document.getElementById('p-nombre').value.trim();
+
+    if (!codigo) { showToast('⚠️ Genera un código primero.'); return; }
+    if (!fecha)  { showToast('⚠️ La fecha es obligatoria.'); return; }
+    if (!nombre) { showToast('⚠️ El nombre es obligatorio.'); return; }
+
+    /* Quién registra: nombre del especialista o "Admin" */
+    var registradoPor = sesionNombre || sesionId || 'Especialista';
+
+    var archivos = Array.from(document.getElementById('p-fotos').files).slice(0, 5);
+
+    function guardarConFotos(fotosBase64) {
+        var partes   = fecha.split('-');
+        var registro = {
+            id:           Date.now(),
+            codigo:       codigo,
+            nombre:       nombre,
+            edad:         document.getElementById('p-edad').value.trim(),
+            genero:       document.getElementById('p-genero').value,
+            telefono:     document.getElementById('p-telefono').value.trim(),
+            fecha:        partes[2] + '/' + partes[1] + '/' + partes[0],
+            diagnostico:  document.getElementById('p-diagnostico').value.trim(),
+            tratamiento:  document.getElementById('p-tratamiento').value.trim(),
+            estado:       document.getElementById('p-estado').value,
+            registradoPor: registradoPor
+        };
+        fotosBase64.forEach(function(b64, i) {
+            registro['foto' + (i + 1)] = b64;
+        });
+
+        showToast('💾 Guardando...');
+        writeToSheet({ sheet: 'Pacientes', action: 'add', row: registro }, function() {
+            showToast('✅ Atención registrada — código: ' + codigo);
+            limpiarFormPaciente();
+            cargarMisRegistros();
+        });
+    }
+
+    if (archivos.length === 0) {
+        guardarConFotos([]);
+    } else {
+        var resultados = [], leidos = 0;
+        archivos.forEach(function(file, i) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                resultados[i] = e.target.result;
+                leidos++;
+                if (leidos === archivos.length) guardarConFotos(resultados);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+}
+
+function limpiarFormPaciente() {
+    ['p-nombre', 'p-edad', 'p-telefono', 'p-diagnostico', 'p-tratamiento']
+        .forEach(function(id) { document.getElementById(id).value = ''; });
+    document.getElementById('p-genero').value = '';
+    document.getElementById('p-estado').value = 'Activo';
+    document.getElementById('p-fotos').value  = '';
+    document.getElementById('p-fotos-preview').innerHTML = '';
+    document.getElementById('p-fecha').value  = new Date().toISOString().split('T')[0];
+    document.getElementById('p-codigo').value = generarCodigoUnicoEsp();
+}
+
+/* ---- Mis registros ---- */
+function cargarMisRegistros() {
+    getData('Pacientes', function(data) {
+        pacientesEspData = data || [];
+
+        /* Mostrar solo los que registró este especialista */
+        var mis = pacientesEspData.filter(function(r) {
+            return (r.registradoPor || r.RegistradoPor || '') === sesionNombre
+                || (r.registradoPor || r.RegistradoPor || '') === sesionId;
+        });
+        /* Si no hay filtro posible (sesión vacía), mostrar todos */
+        if (!sesionNombre && !sesionId) mis = pacientesEspData;
+
+        document.getElementById('contMisReg').textContent = mis.length + ' atenciones';
+        var lista = document.getElementById('listaMisReg');
+        if (!mis.length) {
+            lista.innerHTML = '<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:1rem;">📭 Sin registros aún</p>';
+        } else {
+            var ordenados = mis.slice().sort(function(a, b) { return (b.id || 0) - (a.id || 0); });
+            lista.innerHTML = ordenados.map(function(r) {
+                var estado   = r.estado      || r.Estado      || 'Activo';
+                var esAlta   = estado === 'Alta';
+                var diag     = r.diagnostico || r.Diagnostico || '';
+                var diagCorto = diag.length > 60 ? diag.substring(0, 60) + '…' : diag;
+                return '<div class="pac-row">'
+                    + '<span class="pac-code">' + (r.codigo || r.Codigo || '') + '</span>'
+                    + '<div style="flex:1;min-width:0;">'
+                    + '<div class="pac-nombre">' + (r.nombre || r.Nombre || '') + '</div>'
+                    + (diagCorto ? '<div style="font-size:.68rem;color:var(--muted);margin-top:2px;">' + diagCorto + '</div>' : '')
+                    + '</div>'
+                    + '<span class="pac-fecha">' + (r.fecha || r.Fecha || '') + '</span>'
+                    + '<span class="' + (esAlta ? 'badge-alta' : 'badge-activo') + '">' + estado + '</span>'
+                    + '</div>';
+            }).join('');
+        }
+
+        /* Actualizar código con uno que no exista */
+        var campoCode = document.getElementById('p-codigo');
+        if (campoCode) campoCode.value = generarCodigoUnicoEsp();
+    });
+}
+
+/* ---- Videos ---- */
 function getYTId(url) { if(!url)return null; var m=url.match(/(?:v=|youtu\.be\/)([^&?/]+)/); return m?m[1]:null; }
 
 function previewYT() {
@@ -133,18 +455,16 @@ function previewYT() {
 
 function subirVideo() {
     var url=document.getElementById('vid-url').value.trim(), titulo=document.getElementById('vid-titulo').value.trim(), desc=document.getElementById('vid-desc').value.trim();
-    if(!url){alert('El link de YouTube es obligatorio.');return;}
-    if(!titulo){alert('El título es obligatorio.');return;}
-    if(!desc){alert('La descripción es obligatoria.');return;}
+    if(!url){showToast('⚠️ El link de YouTube es obligatorio');return;}
+    if(!titulo){showToast('⚠️ El título es obligatorio');return;}
+    if(!desc){showToast('⚠️ La descripción es obligatoria');return;}
     var nuevo={id:Date.now(),url:url,titulo:titulo,especialista:sesionId,categoria:document.getElementById('vid-cat').value,descripcion:desc,estado:'publicado',fecha:new Date().toLocaleDateString('es-PE')};
     showToast('📤 Enviando...');
     writeToSheet({sheet:'videos',action:'add',row:nuevo},function(){
-        showToast('✅ Video enviado — Pendiente de aprobación');
+        showToast('✅ Video publicado correctamente');
         document.getElementById('vid-url').value=''; document.getElementById('vid-titulo').value=''; document.getElementById('vid-desc').value='';
         document.getElementById('ytPreview').style.display='none';
         cargarMisVideos();
-        var esp=ESPECIALISTAS_DEFAULT.find(function(e){return e.id===sesionId;});
-        /* Notificación WA desactivada — videos se publican directo */
     });
 }
 
@@ -153,11 +473,14 @@ function cargarMisVideos() {
         var mis=data.filter(function(v){return(v.especialista||v.Especialista||'')===sesionId;});
         var pub=mis.filter(function(v){return(v.estado||v.Estado)==='publicado';}).length;
         document.getElementById('contadorVids').textContent=mis.length+' videos · '+pub+' publicados';
-        if(!mis.length){document.getElementById('misVideosList').innerHTML='<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem;">Aún no tienes videos enviados.</p>';return;}
+        if(!mis.length){document.getElementById('misVideosList').innerHTML='<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:.8rem;">Aún no tienes videos.</p>';return;}
         document.getElementById('misVideosList').innerHTML=mis.map(function(v){
             var ytId=getYTId(v.url||v.URL||''), estado=v.estado||v.Estado||'pendiente';
             var thumb=ytId?'<img src="https://img.youtube.com/vi/'+ytId+'/mqdefault.jpg" style="width:100%;height:100%;object-fit:cover;">':'🎬';
-            return '<div class="vid-item"><div class="vid-thumb-mini">'+thumb+'</div><div class="vid-info"><div class="vid-titulo">'+(v.titulo||v.Título||'')+'</div><div class="vid-meta">'+(v.categoria||v.Categoría||'')+' · '+(v.fecha||'')+'</div></div><span class="estado-pub '+(estado==='publicado'?'pub':'pend')+'">'+estado+'</span></div>';
+            return '<div class="vid-item"><div class="vid-thumb-mini">'+thumb+'</div>'
+                +'<div class="vid-info"><div class="vid-titulo">'+(v.titulo||v.Título||'')+'</div>'
+                +'<div class="vid-meta">'+(v.categoria||v.Categoría||'')+' · '+(v.fecha||'')+'</div></div>'
+                +'<span class="estado-pub '+(estado==='publicado'?'pub':'pend')+'">'+estado+'</span></div>';
         }).join('');
     });
 }

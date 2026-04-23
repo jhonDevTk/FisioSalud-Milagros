@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Atenciones — FisioSalud Milagros</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <style>
+        html, body {
+            height: auto;
+            min-height: 100vh;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 2.5rem 1rem 3rem;
+            background: var(--bg);
+            overflow-y: auto;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px; right: -200px;
+            width: 450px; height: 450px;
+            background: radial-gradient(circle, rgba(0,229,195,.05), transparent 70%);
+            pointer-events: none;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -150px; left: -100px;
+            width: 380px; height: 380px;
+            background: radial-gradient(circle, rgba(123,108,255,.04), transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Logo */
+        .logo-marca { text-align: center; margin-bottom: 2.2rem; }
+        .logo-top   { position: relative; display: inline-block; padding-bottom: .7rem; padding-right: .4rem; }
+        .logo-sub   { font-size: .72rem; color: var(--muted); letter-spacing: .05em; margin-top: .3rem; }
+
+        /* Card de login */
+        .p-card {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem 1.8rem;
+            width: 100%; max-width: 370px;
+            animation: fadeIn .4s ease;
+            text-align: center;
+            position: relative; z-index: 2;
+        }
+        .p-card-icon  { font-size: 2rem; margin-bottom: .8rem; display: block; }
+        .p-card h2    { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: .3rem; }
+        .p-card p     { font-size: .78rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+
+        .p-input {
+            width: 100%;
+            background: rgba(255,255,255,.04);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.05rem;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            text-align: center;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .p-input:focus {
+            border-color: rgba(0,229,195,.45);
+            box-shadow: 0 0 0 3px rgba(0,229,195,.08);
+        }
+        .p-input::placeholder {
+            letter-spacing: .04em;
+            text-transform: none;
+            color: var(--subtle);
+        }
+
+        .p-btn {
+            width: 100%;
+            background: var(--accent);
+            color: #0a0a0f;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: .9rem;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .p-btn:hover {
+            background: #00c9aa;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0,229,195,.22);
+        }
+
+        .p-error {
+            font-size: .75rem;
+            color: #ff6b6b;
+            margin-top: .6rem;
+            display: none;
+            background: rgba(255,107,107,.07);
+            border: 1px solid rgba(255,107,107,.2);
+            border-radius: 7px;
+            padding: 8px 12px;
+        }
+
+        /* Loading */
+        .p-loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--muted);
+            font-size: .82rem;
+            display: none;
+            position: relative; z-index: 2;
+        }
+        .spinner {
+            width: 24px; height: 24px;
+            border: 2.5px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            display: inline-block;
+            margin-bottom: .5rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+        /* Tarjeta resultado */
+        .resultado-card {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.6rem;
+            width: 100%; max-width: 420px;
+            animation: fadeIn .4s ease;
+            display: none;
+            position: relative; z-index: 2;
+        }
+
+        /* Header del paciente */
+        .pac-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: linear-gradient(135deg, #0c1c17, #111126);
+            border: 1.5px solid rgba(0,229,195,.25);
+            border-radius: 14px;
+            padding: 1rem 1.1rem;
+            margin-bottom: 1.3rem;
+        }
+        .pac-avatar {
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            background: rgba(0,229,195,.08);
+            border: 2px solid rgba(0,229,195,.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--accent);
+            flex-shrink: 0;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .pac-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .pac-info h3     { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+        .pac-info .pac-tel { font-size: .74rem; color: var(--muted); margin-bottom: 5px; }
+
+        .badge { font-size: .62rem; font-weight: 700; padding: 3px 9px; border-radius: 100px; text-transform: uppercase; display: inline-block; }
+        .badge-activo { background: rgba(0,229,195,.1); border: 1px solid rgba(0,229,195,.25); color: var(--accent); }
+        .badge-alta   { background: rgba(123,108,255,.1); border: 1px solid rgba(123,108,255,.25); color: var(--accent2); }
+
+        /* Sección label */
+        .sec-label {
+            font-size: .68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: var(--muted);
+            margin-bottom: .8rem;
+            margin-top: 1rem;
+        }
+        .sec-label:first-of-type { margin-top: 0; }
+
+        /* Galería de fotos */
+        .fotos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 7px;
+            margin-bottom: 1rem;
+        }
+        .foto-thumb {
+            aspect-ratio: 1;
+            border-radius: 9px;
+            overflow: hidden;
+            border: 1.5px solid var(--border);
+            background: var(--bg4);
+            cursor: pointer;
+            transition: border-color .2s;
+        }
+        .foto-thumb:hover { border-color: rgba(0,229,195,.4); }
+        .foto-thumb img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+            padding: 1rem;
+        }
+        .lightbox.open { display: flex; }
+        .lightbox img {
+            max-width: 100%; max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.6);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: rgba(255,255,255,.12);
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Sesiones / atenciones */
+        .sesion-item {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 9px;
+            animation: fadeIn .3s ease;
+        }
+        .sesion-fecha {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .82rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        .sesion-fecha .dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+        }
+        .sesion-campo {
+            font-size: .73rem;
+            color: var(--muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-bottom: 2px;
+            margin-top: 7px;
+        }
+        .sesion-valor {
+            font-size: .82rem;
+            color: var(--text);
+            line-height: 1.55;
+        }
+
+        .sin-datos { text-align: center; padding: 1.5rem .5rem; color: var(--muted); font-size: .82rem; }
+        .sin-datos span { font-size: 1.8rem; display: block; margin-bottom: .4rem; }
+
+        /* Botones */
+        .btn-volver {
+            margin-top: 1.2rem;
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--muted);
+            font-family: 'DM Sans', sans-serif;
+            font-size: .82rem;
+            padding: 11px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .btn-volver:hover { border-color: rgba(255,255,255,.2); color: var(--text); }
+
+        .privacy-note {
+            margin-top: 1rem;
+            padding: .7rem 1rem;
+            background: rgba(123,108,255,.05);
+            border: 1px solid rgba(123,108,255,.15);
+            border-radius: 9px;
+            font-size: .72rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .pie {
+            margin-top: 2.5rem;
+            font-size: .7rem;
+            color: var(--subtle);
+            text-align: center;
+            position: relative; z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-marca">
+        <div class="logo-top">
+            <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:#00e5c3;">Fisio</span>
+            <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:#f0f0f5;">Salud</span>
+            <span style="font-family:'Fraunces',serif;font-style:italic;font-size:.8rem;color:#f0f0f5;-webkit-text-stroke:.3px #7b6cff;position:absolute;bottom:0;right:-.1rem;transform:rotate(-9deg);transform-origin:left bottom;white-space:nowrap;">Milagros</span>
+        </div>
+        <div class="logo-sub">Consulta de historial de atenciones</div>
+    </div>
+
+    <!-- CARD LOGIN -->
+    <div class="p-card" id="cajaLogin">
+        <span class="p-card-icon">📋</span>
+        <h2>Consulta tu historial</h2>
+        <p>
+            Ingresa el <strong style="color:var(--text);">código</strong> que
+            te entregó tu especialista para ver tus atenciones
+        </p>
+        <input
+            class="p-input"
+            id="inputCodigo"
+            placeholder="Tu código (ej: 48293017)"
+            maxlength="12"
+            onkeydown="if(event.key==='Enter')buscar()"
+        >
+        <button class="p-btn" onclick="buscar()">Ver mis atenciones →</button>
+        <div class="p-error" id="errorMsg"></div>
+    </div>
+
+    <!-- LOADING -->
+    <div class="p-loading" id="loadingDiv">
+        <div class="spinner"></div><br>Buscando tus datos...
+    </div>
+
+    <!-- RESULTADO -->
+    <div class="resultado-card" id="resultado">
+
+        <!-- Cabecera paciente -->
+        <div class="pac-header">
+            <div class="pac-avatar" id="pacAvatar" onclick="abrirFoto(0)" title="Ver foto">?</div>
+            <div class="pac-info">
+                <h3 id="pacNombre">—</h3>
+                <div class="pac-tel" id="pacTelefono"></div>
+                <span class="badge badge-activo" id="pacEstado">Activo</span>
+            </div>
+        </div>
+
+        <!-- Galería fotos -->
+        <div id="secFotos" style="display:none;">
+            <div class="sec-label">🖼️ Fotos / Radiografías / Recetas</div>
+            <div class="fotos-grid" id="galeriaFotos"></div>
+        </div>
+
+        <!-- Lista de sesiones -->
+        <div class="sec-label">📅 Historial de atenciones</div>
+        <div id="listaSesiones"></div>
+
+        <div class="privacy-note">
+            🔒 <strong style="color:var(--text);">Privacidad:</strong>
+            Solo tú puedes ver tu información. Los datos son de uso exclusivo del paciente.
+        </div>
+        <button class="btn-volver" onclick="volver()">← Consultar otro código</button>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="cerrarLightbox()">
+        <img id="lightboxImg" src="" alt="Foto">
+        <button class="lightbox-close" onclick="cerrarLightbox()">✕</button>
+    </div>
+
+    <div class="pie">
+        FisioSalud Milagros &nbsp;·&nbsp; San Isidro, Lima
+        &nbsp;·&nbsp;
+        <a href="index.html" style="color:var(--muted);text-decoration:none;">Volver al sitio →</a>
+    </div>
+
+<script src="js/config.js"></script>
+<script src="js/sheets.js"></script>
+<script>
+
+var fotosActuales = [];
+
+function buscar() {
+    var codigo = document.getElementById('inputCodigo').value.trim().toUpperCase();
+    if (!codigo) {
+        mostrarError('Por favor ingresa tu código.');
+        return;
+    }
+
+    document.getElementById('errorMsg').style.display  = 'none';
+    document.getElementById('cajaLogin').style.display  = 'none';
+    document.getElementById('loadingDiv').style.display = 'block';
+    document.getElementById('resultado').style.display  = 'none';
+
+    getData('Pacientes', function(data) {
+        document.getElementById('loadingDiv').style.display = 'none';
+
+        /* ── DIAGNÓSTICO: muestra en consola lo que llega del Sheet ── */
+        console.log('=== DIAGNÓSTICO pacientes.html ===');
+        console.log('Código buscado:', JSON.stringify(codigo));
+        console.log('Total registros recibidos:', (data || []).length);
+        if (data && data.length > 0) {
+            console.log('Campos del primer registro:', Object.keys(data[0]));
+            console.log('Primeros 5 registros:');
+            data.slice(0, 5).forEach(function(r, i) {
+                var c = r.codigo || r.Codigo || r.CODIGO || '(sin campo codigo)';
+                console.log('  [' + i + '] codigo=' + JSON.stringify(c) + ' nombre=' + (r.nombre || r.Nombre || ''));
+            });
+        } else {
+            console.log('⚠️ No se recibieron datos del Sheet');
+        }
+
+        /* ── Búsqueda tolerante: ignora espacios y mayúsculas ── */
+        var registros = (data || []).filter(function(r) {
+            /* intenta todos los posibles nombres del campo */
+            var c = r.codigo || r.Codigo || r.CODIGO || r['código'] || r['Código'] || '';
+            return c.toString().trim().toUpperCase() === codigo;
+        });
+
+        console.log('Registros encontrados con código "' + codigo + '":', registros.length);
+
+        if (!registros.length) {
+            /* Mostrar diagnóstico visible en la página si no encuentra */
+            var todosLosCodigos = (data || []).map(function(r) {
+                return r.codigo || r.Codigo || r.CODIGO || '?';
+            }).filter(Boolean).slice(0, 10);
+            console.log('Códigos disponibles en el Sheet:', todosLosCodigos);
+
+            document.getElementById('cajaLogin').style.display = 'block';
+            mostrarError(
+                'No encontramos ese código. ' +
+                (todosLosCodigos.length
+                    ? '(Abre la consola del navegador con F12 para ver el diagnóstico)'
+                    : 'No se pudieron cargar datos del Sheet.')
+            );
+            return;
+        }
+
+        /* Datos del paciente (del registro más reciente) */
+        var ordenados = registros.slice().sort(function(a, b) {
+            return (b.id || 0) - (a.id || 0);
+        });
+        var primero  = ordenados[0];
+        var nombre   = primero.nombre   || primero.Nombre   || 'Paciente';
+        var telefono = primero.telefono || primero.Telefono || '';
+        var estado   = primero.estado   || primero.Estado   || 'Activo';
+
+        /* Avatar — primera foto disponible */
+        var todasLasFotos = recolectarFotos(registros);
+        fotosActuales     = todasLasFotos;
+
+        var avatarEl = document.getElementById('pacAvatar');
+        if (todasLasFotos.length > 0) {
+            avatarEl.innerHTML = '<img src="' + todasLasFotos[0] + '" alt="">';
+            avatarEl.style.cursor = 'pointer';
+        } else {
+            avatarEl.textContent = nombre.charAt(0).toUpperCase();
+            avatarEl.style.cursor = 'default';
+        }
+
+        /* Nombre, teléfono, estado */
+        document.getElementById('pacNombre').textContent = nombre;
+        if (telefono) {
+            document.getElementById('pacTelefono').textContent = '📞 ' + telefono;
+        } else {
+            document.getElementById('pacTelefono').style.display = 'none';
+        }
+        var badgeEl = document.getElementById('pacEstado');
+        badgeEl.textContent  = estado;
+        badgeEl.className    = 'badge ' + (estado === 'Alta' ? 'badge-alta' : 'badge-activo');
+
+        /* Galería de fotos */
+        var secFotos    = document.getElementById('secFotos');
+        var galeriaEl   = document.getElementById('galeriaFotos');
+        if (todasLasFotos.length > 0) {
+            secFotos.style.display = 'block';
+            galeriaEl.innerHTML = todasLasFotos.map(function(src, i) {
+                return '<div class="foto-thumb" onclick="abrirFoto(' + i + ')">'
+                    + '<img src="' + src + '" alt="Foto ' + (i + 1) + '">'
+                    + '</div>';
+            }).join('');
+        } else {
+            secFotos.style.display = 'none';
+        }
+
+        /* Sesiones ordenadas por fecha desc */
+        var sesionesOrdenadas = registros.slice().sort(function(a, b) {
+            return parseFecha(b.fecha || b.Fecha || '') - parseFecha(a.fecha || a.Fecha || '');
+        });
+
+        var listaEl = document.getElementById('listaSesiones');
+        if (!sesionesOrdenadas.length) {
+            listaEl.innerHTML = '<div class="sin-datos"><span>📭</span>Sin atenciones registradas aún.</div>';
+        } else {
+            listaEl.innerHTML = sesionesOrdenadas.map(function(r, i) {
+                var fecha      = r.fecha      || r.Fecha      || '—';
+                var diag       = r.diagnostico || r.Diagnostico || '';
+                var trat       = r.tratamiento || r.Tratamiento || '';
+                var diagHtml   = diag
+                    ? '<div class="sesion-campo">Diagnóstico</div>'
+                    + '<div class="sesion-valor">' + escapeHtml(diag) + '</div>'
+                    : '';
+                var tratHtml   = trat
+                    ? '<div class="sesion-campo">Tratamiento</div>'
+                    + '<div class="sesion-valor">' + escapeHtml(trat) + '</div>'
+                    : '';
+                return '<div class="sesion-item" style="animation-delay:' + (i * 55) + 'ms">'
+                    + '<div class="sesion-fecha"><div class="dot"></div>' + fecha + '</div>'
+                    + diagHtml
+                    + tratHtml
+                    + '</div>';
+            }).join('');
+        }
+
+        document.getElementById('resultado').style.display = 'block';
+    });
+}
+
+/* Recolecta hasta 5 fotos distintas de todos los registros */
+function recolectarFotos(registros) {
+    var fotos = [];
+    var vistas = {};
+    registros.forEach(function(r) {
+        /* Puede haber foto1..foto5 o foto (única) */
+        for (var n = 1; n <= 5; n++) {
+            var f = r['foto' + n] || r['Foto' + n] || '';
+            if (f && f.startsWith('data:') && !vistas[f]) {
+                vistas[f] = true;
+                fotos.push(f);
+            }
+        }
+        /* También soporte campo "foto" legacy */
+        var fLeg = r.foto || r.Foto || '';
+        if (fLeg && fLeg.startsWith('data:') && !vistas[fLeg]) {
+            vistas[fLeg] = true;
+            fotos.push(fLeg);
+        }
+    });
+    return fotos.slice(0, 5);
+}
+
+function abrirFoto(idx) {
+    if (!fotosActuales.length) return;
+    document.getElementById('lightboxImg').src = fotosActuales[idx] || fotosActuales[0];
+    document.getElementById('lightbox').classList.add('open');
+}
+
+function cerrarLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+}
+
+function parseFecha(s) {
+    if (!s) return new Date(0);
+    var p = s.split('/');
+    return p.length === 3 ? new Date(p[2], p[1] - 1, p[0]) : new Date(s);
+}
+
+function mostrarError(msg) {
+    var el = document.getElementById('errorMsg');
+    el.textContent = '❌ ' + msg;
+    el.style.display = 'block';
+}
+
+function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function volver() {
+    document.getElementById('resultado').style.display   = 'none';
+    document.getElementById('cajaLogin').style.display   = 'block';
+    document.getElementById('errorMsg').style.display    = 'none';
+    document.getElementById('pacTelefono').style.display = '';
+    document.getElementById('inputCodigo').value         = '';
+    fotosActuales = [];
+}
+</script>
+</body>
+</html>

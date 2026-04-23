@@ -50,6 +50,8 @@ var WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbw1mtmGvi4lgV5LOWu4lQ
 var SHEETS_BASE_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=';
 
 var SHEETS = {
+    Pacientes:   'Pacientes',
+    pacientes:   'Pacientes',
     equipo:      'Equipo',
     videos:      'Videos',
     servicios:   'Servicios',
