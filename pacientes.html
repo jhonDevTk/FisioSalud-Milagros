@@ -444,6 +444,9 @@ function buscar() {
 
         console.log('Registros encontrados con código "' + codigo + '":', registros.length);
 
+            console.log('REGISTRO COMPLETO');
+            console.log(registros[0]);
+
         if (!registros.length) {
             /* Mostrar diagnóstico visible en la página si no encuentra */
             var todosLosCodigos = (data || []).map(function(r) {
@@ -543,24 +546,31 @@ function buscar() {
 
 /* Recolecta hasta 5 fotos distintas de todos los registros */
 function recolectarFotos(registros) {
+
     var fotos = [];
     var vistas = {};
+
     registros.forEach(function(r) {
-        /* Puede haber foto1..foto5 o foto (única) */
+
         for (var n = 1; n <= 5; n++) {
+
             var f = r['foto' + n] || r['Foto' + n] || '';
-            if (f && f.startsWith('data:') && !vistas[f]) {
+
+            if (f && !vistas[f]) {
                 vistas[f] = true;
                 fotos.push(f);
             }
         }
-        /* También soporte campo "foto" legacy */
+
         var fLeg = r.foto || r.Foto || '';
-        if (fLeg && fLeg.startsWith('data:') && !vistas[fLeg]) {
+
+        if (fLeg && !vistas[fLeg]) {
             vistas[fLeg] = true;
             fotos.push(fLeg);
         }
+
     });
+
     return fotos.slice(0, 5);
 }
 
