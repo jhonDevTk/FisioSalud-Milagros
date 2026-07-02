@@ -425,8 +425,8 @@ function abrirVideo(embedUrl, titulo) {
             '      color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.1rem;',
             '      cursor:pointer;flex-shrink:0;display:flex;align-items:center;',
             '      justify-content:center;transition:all .2s;" ',
-            '      onmouseover="this.style.background='rgba(255,255,255,.2)'" ',
-            '      onmouseout="this.style.background='rgba(255,255,255,.1)'">✕</button>',
+            '      onmouseover="this.style.background=\'rgba(255,255,255,.2)\'" ',
+            '      onmouseout="this.style.background=\'rgba(255,255,255,.1)\'">✕</button>',
             '  </div>',
             /* Contenedor del iframe — ratio 16:9 */
             '  <div style="position:relative;padding-bottom:56.25%;height:0;',
