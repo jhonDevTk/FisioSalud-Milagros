@@ -63,19 +63,19 @@ function parseCSV(text) {
     /* Eliminar BOM UTF-8 que Google Sheets a veces incluye */
     text = text.replace(/^\uFEFF/, '');
 
-    var lines = text.trim().split('\n');
-    if (lines.length < 2) return [];
+    var rows = parseCSVRows(text);
+    if (rows.length < 2) return [];
 
     /* Limpiar headers: quitar espacios y comillas residuales */
-    var headers = parseCSVLine(lines[0]).map(function(h) {
+    var headers = rows[0].map(function(h) {
         return h.trim().replace(/^["'\s]+|["'\s]+$/g, '');
     });
 
     console.log('📋 CSV headers:', headers);
 
-    var result  = [];
-    for (var i = 1; i < lines.length; i++) {
-        var values = parseCSVLine(lines[i]);
+    var result = [];
+    for (var i = 1; i < rows.length; i++) {
+        var values = rows[i];
         if (!values.length) continue;
         var obj = {};
         headers.forEach(function(h, idx) {
@@ -88,24 +88,43 @@ function parseCSV(text) {
     return result;
 }
 
-function parseCSVLine(line) {
-    var result   = [];
+/* Parser de CSV completo (no por líneas), respeta comillas que
+   contienen comas y SALTOS DE LÍNEA reales dentro de un mismo campo
+   (por ejemplo, un textarea de "tratamiento" con Enter entre líneas). */
+function parseCSVRows(text) {
+    var rows     = [];
+    var row      = [];
     var current  = '';
     var inQuotes = false;
-    for (var i = 0; i < line.length; i++) {
-        var ch = line[i];
-        if (ch === '"') {
-            if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
-            else { inQuotes = !inQuotes; }
-        } else if (ch === ',' && !inQuotes) {
-            result.push(current.trim());
-            current = '';
-        } else {
-            current += ch;
+    var i = 0, len = text.length;
+
+    while (i < len) {
+        var ch = text[i];
+
+        if (inQuotes) {
+            if (ch === '"') {
+                if (text[i + 1] === '"') { current += '"'; i += 2; continue; }
+                inQuotes = false; i++; continue;
+            }
+            current += ch; i++; continue;
         }
+
+        if (ch === '"')  { inQuotes = true; i++; continue; }
+        if (ch === ',')  { row.push(current); current = ''; i++; continue; }
+        if (ch === '\r') { i++; continue; } /* ignorar retorno de carro */
+        if (ch === '\n') {
+            row.push(current); current = '';
+            rows.push(row); row = [];
+            i++; continue;
+        }
+        current += ch; i++;
     }
-    result.push(current.trim());
-    return result;
+
+    if (current !== '' || row.length) {
+        row.push(current);
+        rows.push(row);
+    }
+    return rows;
 }
 
 

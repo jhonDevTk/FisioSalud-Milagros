@@ -89,6 +89,26 @@
                     <span class="admin-card-title">📝 Registrar atención de paciente</span>
                 </div>
 
+                <!-- Buscar paciente existente (para pacientes que regresan) -->
+                <div class="admin-form-group" style="position:relative;">
+                    <label>¿Paciente que ya nos visitó antes? Búscalo aquí</label>
+                    <input
+                        class="admin-input"
+                        id="p-buscar-existente"
+                        placeholder="Escribe el nombre o código del paciente..."
+                        autocomplete="off"
+                        oninput="buscarPacienteExistenteEsp(this.value)"
+                        onblur="setTimeout(function(){ document.getElementById('p-buscar-resultados').style.display='none'; }, 150)"
+                    >
+                    <div id="p-buscar-resultados" style="display:none;position:absolute;z-index:20;top:100%;left:0;right:0;
+                        background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);
+                        margin-top:4px;max-height:220px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.35);"></div>
+                    <p style="font-size:.7rem;color:var(--muted);margin-top:5px;line-height:1.5;">
+                        ℹ️ Si el paciente aparece en la lista, selecciónalo y se usará su código existente.
+                        Si no aparece, es un paciente nuevo — solo continúa llenando el formulario.
+                    </p>
+                </div>
+
                 <!-- Código automático -->
                 <div class="admin-form-group">
                     <label>Código del paciente (generado automáticamente)</label>
@@ -291,8 +311,83 @@ function generarCodigoUnicoEsp() {
     return intento;
 }
 
+/* ---- Escapar HTML (evita inyección al mostrar nombres) ---- */
+function escapeHtmlEsp(str) {
+    return (str || '').toString()
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/* ---- Buscar paciente existente por nombre o código ---- */
+function buscarPacienteExistenteEsp(q) {
+    var cont = document.getElementById('p-buscar-resultados');
+    q = (q || '').trim().toLowerCase();
+
+    if (!q) { cont.style.display = 'none'; cont.innerHTML = ''; return; }
+
+    var porCodigo = {};
+    (pacientesEspData || []).forEach(function(r) {
+        var cod = (r.codigo || r.Codigo || '').toString().trim();
+        if (!cod) return;
+        if (!porCodigo[cod] || (r.id || 0) > (porCodigo[cod].id || 0)) {
+            porCodigo[cod] = r;
+        }
+    });
+
+    var coincidencias = Object.keys(porCodigo).map(function(cod) {
+        return porCodigo[cod];
+    }).filter(function(r) {
+        var nombre = (r.nombre || r.Nombre || '').toLowerCase();
+        var cod    = (r.codigo || r.Codigo || '').toString().toLowerCase();
+        return nombre.indexOf(q) !== -1 || cod.indexOf(q) !== -1;
+    }).slice(0, 8);
+
+    if (!coincidencias.length) {
+        cont.style.display = 'block';
+        cont.innerHTML = '<div style="padding:10px 12px;font-size:.78rem;color:var(--muted);">' +
+            'Sin coincidencias — parece un paciente nuevo.</div>';
+        return;
+    }
+
+    cont.style.display = 'block';
+    cont.innerHTML = coincidencias.map(function(r) {
+        var nombre = r.nombre || r.Nombre || '(sin nombre)';
+        var cod    = (r.codigo || r.Codigo || '').toString();
+        return '<div style="padding:9px 12px;cursor:pointer;font-size:.8rem;border-bottom:1px solid var(--border);" ' +
+            'onmousedown="seleccionarPacienteExistenteEsp(\'' + cod.replace(/'/g, "\\'") + '\')" ' +
+            'onmouseover="this.style.background=\'rgba(255,255,255,.05)\'" ' +
+            'onmouseout="this.style.background=\'transparent\'">' +
+            '<strong>' + escapeHtmlEsp(nombre) + '</strong> ' +
+            '<span style="color:var(--accent);font-family:monospace;">· ' + escapeHtmlEsp(cod) + '</span>' +
+            '</div>';
+    }).join('');
+}
+
+/* ---- Al seleccionar un paciente existente: reusar su código y autocompletar ---- */
+function seleccionarPacienteExistenteEsp(codigo) {
+    var candidatos = (pacientesEspData || []).filter(function(r) {
+        return (r.codigo || r.Codigo || '').toString().trim() === codigo;
+    }).sort(function(a, b) { return (b.id || 0) - (a.id || 0); });
+
+    var registro = candidatos[0];
+    if (!registro) return;
+
+    document.getElementById('p-codigo').value   = codigo;
+    document.getElementById('p-nombre').value   = registro.nombre    || registro.Nombre    || '';
+    document.getElementById('p-edad').value     = registro.edad      || registro.Edad      || '';
+    document.getElementById('p-telefono').value = registro.telefono  || registro.Telefono  || '';
+    var genero = registro.genero || registro.Genero || '';
+    if (genero) document.getElementById('p-genero').value = genero;
+
+    document.getElementById('p-buscar-existente').value = (registro.nombre || registro.Nombre || '') + ' · ' + codigo;
+    document.getElementById('p-buscar-resultados').style.display = 'none';
+
+    showToast('✅ Paciente encontrado — se usará su código existente');
+}
+
 function regenerarCodigoEsp() {
     document.getElementById('p-codigo').value = generarCodigoUnicoEsp();
+    document.getElementById('p-buscar-existente').value = '';
 }
 
 function copiarCodigoEsp() {
@@ -399,6 +494,7 @@ function limpiarFormPaciente() {
     document.getElementById('p-fotos-preview').innerHTML = '';
     document.getElementById('p-fecha').value  = new Date().toISOString().split('T')[0];
     document.getElementById('p-codigo').value = generarCodigoUnicoEsp();
+    document.getElementById('p-buscar-existente').value = '';
 }
 
 /* ---- Mis registros ---- */
