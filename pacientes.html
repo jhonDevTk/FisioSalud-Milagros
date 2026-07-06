@@ -479,7 +479,7 @@ function buscar() {
 
         var avatarEl = document.getElementById('pacAvatar');
         if (todasLasFotos.length > 0) {
-            avatarEl.innerHTML = '<img src="' + todasLasFotos[0] + '" alt="">';
+            avatarEl.innerHTML = '<img src="' + normalizarUrlFoto(todasLasFotos[0]) + '" alt="">';
             avatarEl.style.cursor = 'pointer';
         } else {
             avatarEl.textContent = nombre.charAt(0).toUpperCase();
@@ -504,7 +504,7 @@ function buscar() {
             secFotos.style.display = 'block';
             galeriaEl.innerHTML = todasLasFotos.map(function(src, i) {
                 return '<div class="foto-thumb" onclick="abrirFoto(' + i + ')">'
-                    + '<img src="' + src + '" alt="Foto ' + (i + 1) + '">'
+                    + '<img src="' + normalizarUrlFoto(src) + '" alt="Foto ' + (i + 1) + '">'
                     + '</div>';
             }).join('');
         } else {
@@ -544,6 +544,20 @@ function buscar() {
     });
 }
 
+/* Convierte enlaces de Google Drive (uc?export=view, /file/d/...) al
+   formato de miniatura, que es el único que Google permite embeber de
+   forma confiable en <img>. Si no es un enlace de Drive, lo deja igual
+   (por ejemplo fotos en base64 subidas desde el propio sistema). */
+function normalizarUrlFoto(url) {
+    if (!url) return url;
+    var match = url.match(/drive\.google\.com\/.*[?&]id=([a-zA-Z0-9_-]+)/)
+             || url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+        return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w1000';
+    }
+    return url;
+}
+
 /* Recolecta hasta 5 fotos distintas de todos los registros */
 function recolectarFotos(registros) {
 
@@ -576,7 +590,7 @@ function recolectarFotos(registros) {
 
 function abrirFoto(idx) {
     if (!fotosActuales.length) return;
-    document.getElementById('lightboxImg').src = fotosActuales[idx] || fotosActuales[0];
+    document.getElementById('lightboxImg').src = normalizarUrlFoto(fotosActuales[idx] || fotosActuales[0]);
     document.getElementById('lightbox').classList.add('open');
 }
 
