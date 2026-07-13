@@ -82,7 +82,7 @@
         </div>
 
 
-        <!-- ===== PANEL: REGISTRAR PACIENTE ===== -->
+        <!-- ================================= PANEL: REGISTRAR PACIENTE ===== -->
         <div class="esp-panel active" id="espPanel-pacientes">
             <div class="admin-card">
                 <div class="admin-card-header">
@@ -109,7 +109,7 @@
                     </p>
                 </div>
 
-                <!-- Código automático -->
+                <!------- Código automático -------------------------------------------->
                 <div class="admin-form-group">
                     <label>Código del paciente (generado automáticamente)</label>
                     <div style="display:flex;gap:8px;align-items:center;">
@@ -205,7 +205,7 @@
         </div>
 
 
-        <!-- ===== PANEL: SUBIR VIDEO ===== -->
+        <!-- ================================ PANEL: SUBIR VIDEO ===== -->
         <div class="esp-panel" id="espPanel-videos">
             <div class="admin-card">
                 <div class="admin-card-header"><span class="admin-card-title">🎬 Subir nuevo caso clínico</span></div>
@@ -241,7 +241,7 @@
         </div>
 
 
-        <!-- ===== PANEL: MIS REGISTROS ===== -->
+        <!-- ==================================== PANEL: MIS REGISTROS ===== -->
         <div class="esp-panel" id="espPanel-misregistros">
             <div class="admin-card">
                 <div class="admin-card-header">
@@ -282,7 +282,7 @@ window.addEventListener('load', function() {
     cargarMisRegistros();
 });
 
-/* ---- Tabs ---- */
+/* -------------------------------- Tabs --------------------- */
 function switchEspTab(tab, btn) {
     document.querySelectorAll('.esp-tab').forEach(function(t){ t.classList.remove('active'); });
     document.querySelectorAll('.esp-panel').forEach(function(p){ p.classList.remove('active'); });
@@ -427,7 +427,7 @@ function previsualizarFotosEsp(input) {
     });
 }
 
-/* ---- Registrar paciente ---- */
+/* -------------------------- Registrar paciente ----------------------------- */
 function registrarPaciente() {
     var codigo = document.getElementById('p-codigo').value.trim();
     var fecha  = document.getElementById('p-fecha').value;
